@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('slug');
             $table->string('color');
             $table->boolean('is_default')->default(false);
