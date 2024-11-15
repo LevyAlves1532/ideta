@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Ideta - Login</title>
+        <title>Ideta - Registre-se</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Fonts -->
@@ -26,10 +26,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">Cadastre-se</a>
+                            <a class="nav-link active" aria-current="page" href="{{ route('register') }}">Cadastre-se</a>
                         </li>
                     </ul>
                 </div>
@@ -40,39 +40,33 @@
             <div class="container-form">
                 <div class="card">
                     <div class="card-header bg-success text-white">
-                        <h4 class="py-2" style="margin-bottom: 0; text-align: center;">Faça seu login</h4>
+                        <h4 class="py-2" style="margin-bottom: 0; text-align: center;">Faça seu cadastro</h4>
                     </div>
                     <div class="card-body">
-                        @if (session('system_errors'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <div class="">
-                                    <ul style="margin: 0">
-                                        @foreach (session('system_errors') as $errorItem)
-                                            <li>{{ $errorItem }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
-                        <form method="POST" action="{{ route('login.post') }}">
+                        <form method="POST" action="{{ route('register.post') }}">
                             @csrf
                             <div class="mb-3">
+                                <label for="name" class="form-label">Nome:</label>
+                                <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}">
+                                @error('name')
+                                    <div class="form-text text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
                                 <label for="email" class="form-label">E-mail:</label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}">
+                                <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}">
                                 @error('email')
                                     <div class="form-text text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Senha</label>
-                                <input type="password" class="form-control" id="password" name="password" value="{{ old('password') }}">
+                                <input type="password" name="password" class="form-control" id="password" value="{{ old('password') }}">
                                 @error('password')
                                     <div class="form-text text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
-                            <button type="submit" class="btn btn-primary">Logar</button>
+                            <button type="submit" class="btn btn-primary">Cadastre-se</button>
                         </form>
                     </div>
                 </div>

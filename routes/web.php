@@ -8,9 +8,15 @@ use App\Http\Controllers\NoteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AuthController::class, 'index'])->name('login');
-Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::post('/login', [AuthController::class, 'show'])->name('login.post');
+Route::get('/registre-se', [AuthController::class, 'create'])->name('register');
+Route::post('/registre-se', [AuthController::class, 'store'])->name('register.post');
 
-Route::resource('/categorias', CategoryController::class);
-Route::resource('/ideias', IdeaController::class);
+Route::middleware('auth')->group(function() {
+    Route::get('/', [HomeController::class, 'index'])->name('index');
 
-Route::get('/notas/{id}', [NoteController::class, 'show'])->name('notas.show');
+    Route::resource('/categorias', CategoryController::class);
+    Route::resource('/ideias', IdeaController::class);
+
+    Route::get('/notas/{id}', [NoteController::class, 'show'])->name('notas.show');
+});
