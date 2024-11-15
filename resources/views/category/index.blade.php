@@ -12,6 +12,25 @@
         </div>
         <hr>
         @if ($categories->count() > 0)
+            <div class="d-flex" style="justify-content: flex-end">
+                <form action="{{ route('categorias.index') }}" class="mb-3 row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="search" class="col-form-label">Pesquisar</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="search" class="form-control" name="search">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-success">Buscar</button>
+                    </div>
+                    @if (!empty($request['search']))
+                        <div class="col-auto">
+                            <a href="{{ route('categorias.index') }}" class="btn btn-primary">Limpar Filtro</a>
+                        </div>
+                    @endif
+                </form>
+            </div>
+
             <table class="table table-hover table-dark">
                 <thead>
                     <tr>
@@ -53,7 +72,7 @@
                 </tbody>
             </table>
 
-            {{ $categories->links() }}
+            {{ $categories->appends($request)->links('pagination::bootstrap-5') }}
         @else
 
         @endif
