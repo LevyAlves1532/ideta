@@ -55,13 +55,13 @@
                                         Ações
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-secondary" href="{{ route('categorias.show', ['categoria' => $category->id]) }}">Visualizar</a></li>
-                                        <li><a class="dropdown-item text-primary" href="{{ route('categorias.edit', ['categoria' => $category->id]) }}">Editar</a></li>
+                                        <li><a class="dropdown-item text-secondary" href="{{ route('categorias.show', ['categoria' => $category->slug]) }}">Visualizar</a></li>
+                                        <li><a class="dropdown-item text-primary" href="{{ route('categorias.edit', ['categoria' => $category->slug]) }}">Editar</a></li>
                                         <li>
                                             <form id="form-{{ $category->id }}" method="POST" action="{{ route('categorias.destroy', ['categoria' => $category->id]) }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-{{ $category->id }}').submit()">Deletar</a>
+                                                <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-{{ $category->slug }}').submit()">Deletar</a>
                                             </form>
                                         </li>
                                     </ul>
@@ -74,7 +74,7 @@
 
             {{ $categories->appends($request)->links('pagination::bootstrap-5') }}
         @else
-
+            <p class="text-center text-secondary">Não há categorias</p>
         @endif
     </div>
 @endsection

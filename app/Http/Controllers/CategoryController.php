@@ -69,9 +69,15 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $slug)
     {
-        //
+        $category = Category::where('slug', $slug)->where('user_id', Auth::user()->id)->first();
+
+        if (!$category) return redirect()->route('categorias.index');
+
+        return view('category.edit', [
+            'category' => $category,
+        ]);
     }
 
     /**
@@ -79,7 +85,28 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if (!$category) return redirect()->route('categorias.index');
+
+        $body = $request->only('name', 'color');
+
+        $body['id'] = $category->id;
+        $validated = $this->validate($body, true);
+        unset($body['id']);
+
+        if ($validated->fails()) {
+            return redirect()
+                ->route('categorias.edit', ['categoria' => $category->slug])
+                ->withErrors($validated->errors())
+                ->withInput();
+        }
+
+        $body['slug'] = Str::slug($body['name']);
+
+        $category->update($body);
+
+        return redirect()->route('categorias.edit', ['categoria' => $category->slug]);
     }
 
     /**
@@ -105,6 +132,10 @@ class CategoryController extends Controller
             'color.required' => 'O campo de cor é obrigatório',
             'color.hex_color' => 'O valor do campo cor deve ser uma cor hexadecimal',
         ];
+
+        if ($isUpdate) {
+            $rules['name'] = $rules['name'] . ',name,' . $body['id'];
+        }
 
         return Validator::make($body, $rules, $messages);
     }
