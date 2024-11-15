@@ -1,4 +1,8 @@
-@extends('_layout.base')
+@extends('_layout.base', [
+    'navItemActive' => 'home',
+])
+
+@section('sufix', 'Home')
 
 @section('body')
     <div class="container py-3">
