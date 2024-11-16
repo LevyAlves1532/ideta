@@ -33,7 +33,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link @isset($navItemActive) {{ $navItemActive === 'categories' ? 'active' : '' }} @endisset" aria-current="page" href="{{ route('categorias.index') }}">Categorias</a>
+                                <a class="nav-link @isset($navItemActive) {{ $navItemActive === 'categories' ? 'active' : '' }} @endisset" aria-current="page" href="{{ route('categories.index') }}">Categorias</a>
                             </li>
 
                             <li class="nav-item">

@@ -1,7 +1,7 @@
 @if (isset($category))
-    <form method="POST" action="{{ route('categorias.update', ['categoria' => $category->id]) }}">
+    <form method="POST" action="{{ route('categories.update', ['categoria' => $category->id]) }}">
 @else
-    <form method="POST" action="{{ route('categorias.store') }}">
+    <form method="POST" action="{{ route('categories.store') }}">
 @endif
     @if (!isset($isVisible))
         @csrf

@@ -1,6 +1,6 @@
 <div class="modal fade" id="modal-add-idea" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form method="POST" action="{{ route('categorias.add-idea') }}" class="modal-content">
+        <form method="POST" action="{{ route('categories.add-idea') }}" class="modal-content">
             @csrf
             <input type="hidden" name="category_id" value="{{ $category->id }}">
             <div class="modal-header">

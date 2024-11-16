@@ -15,9 +15,17 @@ Route::post('/registre-se', [AuthController::class, 'store'])->name('register.po
 Route::middleware('auth')->group(function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
 
-    Route::post('/categorias/ideia', [CategoryController::class, 'addIdeaCategory'])->name('categorias.add-idea');
-    Route::delete('/categorias/ideia/{ideia}', [CategoryController::class, 'removeIdeaCategory'])->name('categorias.remove-idea');
-    Route::resource('/categorias', CategoryController::class);
+    Route::post('/categorias/ideia', [CategoryController::class, 'addIdeaCategory'])->name('categories.add-idea');
+    Route::delete('/categorias/ideia/{ideia}', [CategoryController::class, 'removeIdeaCategory'])->name('categories.remove-idea');
+    Route::resource('/categorias', CategoryController::class)->names([
+        'index' => 'categories.index',
+        'create' => 'categories.create',
+        'store' => 'categories.store',
+        'show' => 'categories.show',
+        'edit' => 'categories.edit',
+        'update' => 'categories.update',
+        'destroy' => 'categories.destroy',
+    ]);
     Route::resource('/ideias', IdeaController::class);
 
     Route::get('/notas/{id}', [NoteController::class, 'show'])->name('notas.show');

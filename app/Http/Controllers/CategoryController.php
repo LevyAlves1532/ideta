@@ -44,7 +44,7 @@ class CategoryController extends Controller
 
         if ($validated->fails()) {
             return redirect()
-                ->route('categorias.create')
+                ->route('categories.create')
                 ->withErrors($validated->errors())
                 ->withInput();
         }
@@ -54,7 +54,7 @@ class CategoryController extends Controller
 
         $category = Category::create($body);
 
-        return redirect()->route('categorias.edit', [
+        return redirect()->route('categories.edit', [
             'categoria' => $category->id,
         ]);
     }
@@ -62,11 +62,11 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $slug)
+    public function show(string $id)
     {
-        $category = Category::where('slug', $slug)->where('user_id', Auth::user()->id)->first();
+        $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
 
-        if (!$category) return redirect()->route('categorias.index');
+        if (!$category) return redirect()->route('categories.index');
 
         $ideas = $category->ideas()->paginate(5);
         $unrelatedIdeas = Idea::whereDoesntHave('categories', function ($query) use ($category) {
@@ -83,11 +83,11 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $slug)
+    public function edit(string $id)
     {
-        $category = Category::where('slug', $slug)->where('user_id', Auth::user()->id)->first();
+        $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
 
-        if (!$category) return redirect()->route('categorias.index');
+        if (!$category) return redirect()->route('categories.index');
 
         return view('category.edit', [
             'category' => $category,
@@ -101,7 +101,7 @@ class CategoryController extends Controller
     {
         $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
 
-        if (!$category) return redirect()->route('categorias.index');
+        if (!$category) return redirect()->route('categories.index');
 
         $body = $request->only('name', 'color');
 
@@ -111,7 +111,7 @@ class CategoryController extends Controller
 
         if ($validated->fails()) {
             return redirect()
-                ->route('categorias.edit', ['categoria' => $category->slug])
+                ->route('categories.edit', ['categoria' => $category->slug])
                 ->withErrors($validated->errors())
                 ->withInput();
         }
@@ -120,7 +120,7 @@ class CategoryController extends Controller
 
         $category->update($body);
 
-        return redirect()->route('categorias.edit', ['categoria' => $category->slug]);
+        return redirect()->route('categories.edit', ['categoria' => $category->slug]);
     }
 
     /**
@@ -136,7 +136,7 @@ class CategoryController extends Controller
         $body = $request->only('category_id', 'idea_id');
         $category = Category::where('id', $body['category_id'])->where('user_id', Auth::user()->id)->first();
 
-        if (!$category) return redirect()->route('categorias.index');
+        if (!$category) return redirect()->route('categories.index');
 
         $validated = $this->validateRelations($body);
 
@@ -148,8 +148,8 @@ class CategoryController extends Controller
 
         $category->ideas()->attach($body['idea_id']);
 
-        return redirect()->route('categorias.show', [
-            'categoria' => $category->slug,
+        return redirect()->route('categories.show', [
+            'categoria' => $category->id,
         ]);
     }
 
@@ -160,7 +160,7 @@ class CategoryController extends Controller
 
         $body['idea_id'] = $id;
 
-        if (!$category) return redirect()->route('categorias.index');
+        if (!$category) return redirect()->route('categories.index');
 
         $validated = $this->validateRelations($body);
 
@@ -172,8 +172,8 @@ class CategoryController extends Controller
 
         $category->ideas()->detach($body['idea_id']);
 
-        return redirect()->route('categorias.show', [
-            'categoria' => $category->slug,
+        return redirect()->route('categories.show', [
+            'categoria' => $category->id,
         ]);
     }
 

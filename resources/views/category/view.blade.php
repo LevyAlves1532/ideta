@@ -8,7 +8,7 @@
     <div class="container p-3">
         <div class="d-flex mt-3" style="justify-content: space-between;align-items:center">
             <h2>Visualizar Categoria</h2>
-            <a href="{{ route('categorias.index') }}" class="btn btn-primary float-right">Voltar</a>
+            <a href="{{ route('categories.index') }}" class="btn btn-primary float-right">Voltar</a>
         </div>
         <hr>
         <div style="max-width: 450px; margin-top: 16px; margin-left:auto; margin-right: auto;">
@@ -38,7 +38,7 @@
                             <tr>
                                 <td style="vertical-align: middle;">{{ $idea->title }}</td>
                                 <td>
-                                    <form method="POST" action="{{ route('categorias.remove-idea', ['ideia' => $idea->id]) }}">
+                                    <form method="POST" action="{{ route('categories.remove-idea', ['ideia' => $idea->id]) }}">
                                         @csrf
                                         @method('DELETE')
                                         <input type="hidden" name="category_id" value="{{ $category->id }}">
