@@ -128,7 +128,23 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if (!$category) return redirect()->route('categories.index');
+
+        if ($category->is_default) {
+            return redirect()
+                ->route('categories.index')
+                ->with('system_errors', [
+                    'Está categoria não pode ser deletada!',
+                ]);
+        }
+
+        $category->ideas()->detach();
+
+        $category->delete();
+
+        return redirect()->route('categories.index');
     }
 
     public function addIdeaCategory(Request $request)
