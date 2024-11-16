@@ -13,9 +13,15 @@ class IdeaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('idea.index');
+        $search = $request->get('search') ?? '';
+        $ideas = Idea::where('title', 'LIKE', '%' . $search . '%')->paginate(5);
+
+        return view('idea.index', [
+            'ideas' => $ideas,
+            'request' => $request->all(),
+        ]);
     }
 
     /**
