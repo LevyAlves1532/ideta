@@ -15,6 +15,8 @@ Route::post('/registre-se', [AuthController::class, 'store'])->name('register.po
 Route::middleware('auth')->group(function() {
     Route::get('/', [HomeController::class, 'index'])->name('index');
 
+    Route::post('/categorias/ideia', [CategoryController::class, 'addIdeaCategory'])->name('categorias.add-idea');
+    Route::delete('/categorias/ideia/{ideia}', [CategoryController::class, 'removeIdeaCategory'])->name('categorias.remove-idea');
     Route::resource('/categorias', CategoryController::class);
     Route::resource('/ideias', IdeaController::class);
 
