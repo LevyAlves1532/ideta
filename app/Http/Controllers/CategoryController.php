@@ -111,7 +111,7 @@ class CategoryController extends Controller
 
         if ($validated->fails()) {
             return redirect()
-                ->route('categories.edit', ['categoria' => $category->slug])
+                ->route('categories.edit', ['categoria' => $category->id])
                 ->withErrors($validated->errors())
                 ->withInput();
         }
@@ -120,7 +120,7 @@ class CategoryController extends Controller
 
         $category->update($body);
 
-        return redirect()->route('categories.edit', ['categoria' => $category->slug]);
+        return redirect()->route('categories.edit', ['categoria' => $category->id]);
     }
 
     /**
