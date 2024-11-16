@@ -16,7 +16,6 @@
                 <div class="col-auto">
                     <select class="form-select" aria-label="Default select example">
                         <option selected disabled>Selecione a categoria</option>
-                        <option value="all">Todos</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->slug }}">{{ $category->name }}</option>
                         @endforeach

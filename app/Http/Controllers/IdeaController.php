@@ -16,7 +16,7 @@ class IdeaController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search') ?? '';
-        $ideas = Idea::where('title', 'LIKE', '%' . $search . '%')->paginate(5);
+        $ideas = Idea::where('user_id', Auth::user()->id)->where('title', 'LIKE', '%' . $search . '%')->paginate(5);
 
         return view('idea.index', [
             'ideas' => $ideas,
@@ -29,7 +29,7 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::where('user_id', Auth::user()->id)->get();
         return view('idea.create', [
             'categories' => $categories,
         ]);
@@ -75,7 +75,7 @@ class IdeaController extends Controller
     public function edit(string $id)
     {
         $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
-        $categories = Category::all();
+        $categories = Category::where('user_id', Auth::user()->id)->get();
         $selectedCategories = $idea->categories->map(function ($category) {
             return $category->id;
         })->toArray();

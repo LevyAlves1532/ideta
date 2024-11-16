@@ -18,7 +18,7 @@ class CategoryController extends Controller
     {
         $search = $request->get('search') ?? '';
 
-        $categories = Category::where('name', 'LIKE', '%' . $search . '%')->paginate(5);
+        $categories = Category::where('user_id', Auth::user()->id)->where('name', 'LIKE', '%' . $search . '%')->paginate(5);
         return view('category.index', [
             'categories' => $categories,
             'request' => $request->all(),
