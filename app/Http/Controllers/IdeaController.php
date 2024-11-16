@@ -74,7 +74,19 @@ class IdeaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        $categories = Category::all();
+        $selectedCategories = $idea->categories->map(function ($category) {
+            return $category->id;
+        })->toArray();
+
+        if (!$idea) return redirect()->route('categories.index');
+
+        return view('idea.edit', [
+            'idea' => $idea,
+            'categories' => $categories,
+            'selectedCategories' => $selectedCategories,
+        ]);
     }
 
     /**
@@ -82,7 +94,32 @@ class IdeaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if (!$idea) return redirect()->route('ideias.index');
+
+        $body = $request->only('title', 'categories');
+
+        $body['id'] = $idea->id;
+        $validated = $this->validate($body, true);
+        unset($body['id']);
+
+        if ($validated->fails()) {
+            return redirect()
+                ->route('ideias.edit', ['ideia' => $idea->id])
+                ->withErrors($validated->errors())
+                ->withInput();
+        }
+
+        $idea->update([
+            'title' => $body['title']
+        ]);
+
+        if (isset($body['categories'])) {
+            $idea->categories()->sync($body['categories']);
+        }
+
+        return redirect()->route('ideias.edit', ['ideia' => $idea->id]);
     }
 
     /**
@@ -93,7 +130,7 @@ class IdeaController extends Controller
         //
     }
 
-    private function validate($body)
+    private function validate($body, $isUpdate = false)
     {
         $rules = [
             'title' => 'required|min:3|max:255|unique:ideas',
@@ -102,14 +139,18 @@ class IdeaController extends Controller
         ];
 
         $messages = [
-            'title.required' => 'O campo de nome é obrigatório',
-            'title.min' => 'O campo de nome deve ter no mínimo 3 caracteres',
-            'title.max' => 'O campo de nome deve ter no máximo 255 caracteres',
+            'title.required' => 'O campo de título é obrigatório',
+            'title.min' => 'O campo de título deve ter no mínimo 3 caracteres',
+            'title.max' => 'O campo de título deve ter no máximo 255 caracteres',
             'title.unique' => 'Já existe uma ideia com esse título',
             'categories.required' => 'O campo de categorias é obrigatório',
             'categories.array' => 'O campo de categorias deve ser um array',
             'categories.*.exists' => 'Uma ou mais categorias selecionadas são inválidas',
         ];
+
+        if ($isUpdate) {
+            $rules['title'] = $rules['title'] . ',title,' . $body['id'];
+        }
 
         return Validator::make($body, $rules, $messages);
     }

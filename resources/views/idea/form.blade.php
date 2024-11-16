@@ -9,6 +9,9 @@
             @method('PUT')
         @endif
     @endif
+    @php
+        $sCategories = old('categories') ?? $selectedCategories ?? [];
+    @endphp
     <div class="mb-3">
         <label for="title" class="form-label">Título</label>
         <input type="text" class="form-control" id="title" name="title" value="{{ old('title') ?? $idea->title ?? '' }}" @if (isset($isVisible)) disabled @endif>
@@ -19,11 +22,11 @@
     <div class="mb-3">
         <label for="categories" class="form-label">Categorias</label>
         <select class="form-select" multiple name="categories[]" id="categories">
-            <option @if (empty(old('categories'))) selected @endif disabled>Selecione uma ou mais categorias</option>
+            <option @if (empty($sCategories)) selected @endif disabled>Selecione uma ou mais categorias</option>
             @foreach ($categories as $category)
                 <option
                     value="{{ $category->id }}"
-                    @if (is_array(old('categories')) && in_array($category->id, old('categories')))
+                    @if (in_array($category->id, $sCategories))
                     selected
                     @endif
                 >

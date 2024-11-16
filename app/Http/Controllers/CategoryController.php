@@ -50,7 +50,6 @@ class CategoryController extends Controller
         }
 
         $body['user_id'] = Auth::user()->id;
-        $body['slug'] = Str::slug($body['name']);
 
         $category = Category::create($body);
 
@@ -115,8 +114,6 @@ class CategoryController extends Controller
                 ->withErrors($validated->errors())
                 ->withInput();
         }
-
-        $body['slug'] = Str::slug($body['name']);
 
         $category->update($body);
 
