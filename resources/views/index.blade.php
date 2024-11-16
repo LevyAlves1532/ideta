@@ -10,12 +10,16 @@
         <hr>
 
         <div class="d-flex">
-            <h4 class="mt-3 me-auto">Todas as Ideias</h4>
+            <h4 class="mt-3 me-auto">Ultimas Ideias Trabalhadas</h4>
 
             <form class="row g-3 align-items-center float-right">
                 <div class="col-auto">
                     <select class="form-select" aria-label="Default select example">
                         <option selected disabled>Selecione a categoria</option>
+                        <option value="all">Todos</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->slug }}">{{ $category->name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-auto">

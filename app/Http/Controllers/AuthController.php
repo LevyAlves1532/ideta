@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +58,15 @@ class AuthController extends Controller
         $validated = $this->validate($body, true);
 
         if (!$validated->fails()) {
-            User::create($body);
+            $user = User::create($body);
+
+            Category::create([
+                'user_id' => $user->id,
+                'name' => 'Todas',
+                'slug' => 'todas',
+                'color' => '#000000',
+                'is_default' => true,
+            ]);
 
             Auth::attempt([
                 'email' => $body['email'],
