@@ -61,9 +61,15 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        //
+        $category = Category::where('slug', $slug)->where('user_id', Auth::user()->id)->first();
+
+        if (!$category) return redirect()->route('categorias.index');
+
+        return view('category.view', [
+            'category' => $category,
+        ]);
     }
 
     /**
