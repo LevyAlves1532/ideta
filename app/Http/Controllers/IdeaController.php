@@ -7,6 +7,7 @@ use App\Models\Idea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class IdeaController extends Controller
 {
@@ -133,7 +134,14 @@ class IdeaController extends Controller
     private function validate($body, $isUpdate = false)
     {
         $rules = [
-            'title' => 'required|min:3|max:255|unique:ideas',
+            'title' => [
+                'required',
+                'min:3',
+                'max:255',
+                Rule::unique('ideas')->where(function($query) {
+                    return $query->where('user_id', Auth::user()->id);
+                })
+            ],
             'categories' => 'required|array',
             'categoreis.*' => 'exists:categories,id',
         ];
