@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -207,7 +208,14 @@ class CategoryController extends Controller
     private function validate($body, $isUpdate = false)
     {
         $rules = [
-            'name' => 'required|min:3|max:255|unique:categories',
+            'name' => [
+                'required',
+                'min:3',
+                'max:255',
+                Rule::unique('categories')->where(function($query) {
+                    return $query->where('user_id', Auth::user()->id);
+                })
+            ],
             'color' => 'required|hex_color'
         ];
 
