@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function() {
         'update' => 'categories.update',
         'destroy' => 'categories.destroy',
     ]);
+    Route::post('/ideias/categoria', [IdeaController::class, 'addCategoryIdea'])->name('ideas.add-category');
+    Route::delete('/ideias/categoria/{categoria}', [IdeaController::class, 'removeCategoryIdea'])->name('ideas.remove-category');
     Route::resource('/ideias', IdeaController::class);
 
     Route::get('/notas/{id}', [NoteController::class, 'show'])->name('notas.show');

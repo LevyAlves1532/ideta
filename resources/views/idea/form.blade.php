@@ -21,7 +21,7 @@
     </div>
     <div class="mb-3">
         <label for="categories" class="form-label">Categorias</label>
-        <select class="form-select" multiple name="categories[]" id="categories">
+        <select class="form-select" multiple name="categories[]" id="categories" @if (isset($isVisible)) disabled @endif>
             <option @if (empty($sCategories)) selected @endif disabled>Selecione uma ou mais categorias</option>
             @foreach ($categories as $category)
                 <option

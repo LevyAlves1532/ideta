@@ -67,7 +67,31 @@ class IdeaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $userId = Auth::user()->id;
+
+        $idea = Idea::where('id', $id)->where('user_id', $userId)->first();
+
+        if (!$idea) return redirect()->route('categories.index');
+
+        $allCategories = Category::where('user_id', $userId)->get();
+
+        $categories = $idea->categories()->paginate(5);
+
+        $unrelatedCategories = Category::whereDoesntHave('ideas', function ($query) use ($idea) {
+            $query->where('ideas.id', $idea->id);
+        })->where('user_id', $userId)->get();
+
+        $selectedCategories = $idea->categories->map(function ($category) {
+            return $category->id;
+        })->toArray();
+
+        return view('idea.view', [
+            'idea' => $idea,
+            'allCategories' => $allCategories,
+            'selectedCategories' => $selectedCategories,
+            'categories' => $categories,
+            'unrelatedCategories' => $unrelatedCategories,
+        ]);
     }
 
     /**
@@ -129,6 +153,66 @@ class IdeaController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function addCategoryIdea(Request $request)
+    {
+        $body = $request->only('idea_id', 'category_id');
+        $idea = Idea::where('id', $body['idea_id'])->where('user_id', Auth::user()->id)->first();
+
+        if (!$idea) return redirect()->route('ideias.index');
+
+        $validated = $this->validateRelations($body);
+
+        if ($validated->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validated->errors());
+        }
+
+        $idea->categories()->attach($body['category_id']);
+
+        return redirect()->route('ideias.show', [
+            'ideia' => $idea->id,
+        ]);
+    }
+
+    public function removeCategoryIdea(Request $request, $id)
+    {
+        $body = $request->only('idea_id');
+        $idea = Idea::where('id', $body['idea_id'])->where('user_id', Auth::user()->id)->first();
+
+        $body['category_id'] = $id;
+
+        if (!$idea) return redirect()->route('ideias.index');
+
+        $validated = $this->validateRelations($body);
+
+        if ($validated->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validated->errors());
+        }
+
+        $idea->categories()->detach($body['category_id']);
+
+        return redirect()->route('ideias.show', [
+            'ideia' => $idea->id,
+        ]);
+    }
+
+    private function validateRelations($body)
+    {
+        $rules = [
+            'category_id' => 'required|exists:categories,id',
+        ];
+
+        $messages = [
+            'category_id.required' => 'O campo de ideia é obrigatório',
+            'category_id.exists' => 'A ideia é inválida',
+        ];
+
+        return Validator::make($body, $rules, $messages);
     }
 
     private function validate($body, $isUpdate = false)
