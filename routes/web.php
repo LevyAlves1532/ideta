@@ -30,5 +30,5 @@ Route::middleware('auth')->group(function() {
     Route::delete('/ideias/categoria/{categoria}', [IdeaController::class, 'removeCategoryIdea'])->name('ideas.remove-category');
     Route::resource('/ideias', IdeaController::class);
 
-    Route::get('/notas/{id}', [NoteController::class, 'show'])->name('notas.show');
+    Route::get('/notas/{idea_id}', [NoteController::class, 'index'])->name('notes.index');
 });
