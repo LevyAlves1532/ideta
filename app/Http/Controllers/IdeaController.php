@@ -152,7 +152,15 @@ class IdeaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if (!$idea) return redirect()->route('ideias.index');
+
+        $idea->categories()->detach();
+
+        $idea->delete();
+
+        return redirect()->route('ideias.index');
     }
 
     public function addCategoryIdea(Request $request)
