@@ -21,9 +21,17 @@
                         <input type="text" id="search" class="form-control" name="search">
                     </div>
                     <div class="col-auto">
+                        <select class="form-select" name="category_id">
+                            <option selected disabled>Selecione uma categoria</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" @if (!empty($request['category_id']) && $request['category_id'] == $category->id) selected @endif>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-auto">
                         <button type="submit" class="btn btn-success">Buscar</button>
                     </div>
-                    @if (!empty($request['search']))
+                    @if (!empty($request['search']) || !empty($request['category_id']))
                         <div class="col-auto">
                             <a href="{{ route('ideias.index') }}" class="btn btn-primary">Limpar Filtro</a>
                         </div>

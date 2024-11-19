@@ -16,12 +16,26 @@ class IdeaController extends Controller
      */
     public function index(Request $request)
     {
+        $userId = Auth::user()->id;
         $search = $request->get('search') ?? '';
-        $ideas = Idea::where('user_id', Auth::user()->id)->where('title', 'LIKE', '%' . $search . '%')->paginate(5);
+        $categoryId = $request->get('category_id') ?? '';
+
+        $ideas = Idea::where('user_id', $userId)
+            ->where('title', 'LIKE', '%' . $search . '%')
+            ->when($categoryId, function ($query, $categoryId) {
+                if (!empty($categoryId)) {
+                    $query->whereHas('categories', function ($query) use ($categoryId) {
+                        $query->where('categories.id', $categoryId);
+                    });
+                }
+            })
+            ->paginate(5);
+        $categories = Category::where('user_id', $userId)->get();
 
         return view('idea.index', [
             'ideas' => $ideas,
             'request' => $request->all(),
+            'categories' => $categories,
         ]);
     }
 
