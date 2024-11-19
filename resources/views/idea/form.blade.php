@@ -1,7 +1,7 @@
 @if (isset($idea))
-    <form method="POST" action="{{ route('ideias.update', ['ideia' => $idea->id]) }}">
+    <form method="POST" action="{{ route('ideas.update', ['ideia' => $idea->id]) }}">
 @else
-    <form method="POST" action="{{ route('ideias.store') }}">
+    <form method="POST" action="{{ route('ideas.store') }}">
 @endif
     @if (!isset($isVisible))
         @csrf
@@ -24,14 +24,16 @@
         <select class="form-select" multiple name="categories[]" id="categories" @if (isset($isVisible)) disabled @endif>
             <option @if (empty($sCategories)) selected @endif disabled>Selecione uma ou mais categorias</option>
             @foreach ($categories as $category)
-                <option
-                    value="{{ $category->id }}"
-                    @if (in_array($category->id, $sCategories))
-                    selected
-                    @endif
-                >
-                    {{ $category->name }}
-                </option>
+                @if (!$category->is_default)
+                    <option
+                        value="{{ $category->id }}"
+                        @if (in_array($category->id, $sCategories))
+                        selected
+                        @endif
+                    >
+                        {{ $category->name }}
+                    </option>
+                @endif
             @endforeach
         </select>
         @error('categories')

@@ -8,17 +8,17 @@
     <div class="container p-3">
         <div class="d-flex mt-3" style="justify-content: space-between;align-items:center">
             <h2>Lista de Ideias</h2>
-            <a href="{{ route('ideias.create') }}" class="btn btn-success float-right">Criar Ideia</a>
+            <a href="{{ route('ideas.create') }}" class="btn btn-success float-right">Criar Ideia</a>
         </div>
         <hr>
         @if ($ideas->count() > 0)
             <div class="d-flex" style="justify-content: flex-end">
-                <form action="{{ route('ideias.index') }}" class="mb-3 row g-3 align-items-center">
+                <form action="{{ route('ideas.index') }}" class="mb-3 row g-3 align-items-center">
                     <div class="col-auto">
                         <label for="search" class="col-form-label">Pesquisar</label>
                     </div>
                     <div class="col-auto">
-                        <input type="text" id="search" class="form-control" name="search">
+                        <input type="text" id="search" class="form-control" name="search" value="{{ $request['search'] ?? '' }}">
                     </div>
                     <div class="col-auto">
                         <select class="form-select" name="category_id">
@@ -33,7 +33,7 @@
                     </div>
                     @if (!empty($request['search']) || !empty($request['category_id']))
                         <div class="col-auto">
-                            <a href="{{ route('ideias.index') }}" class="btn btn-primary">Limpar Filtro</a>
+                            <a href="{{ route('ideas.index') }}" class="btn btn-primary">Limpar Filtro</a>
                         </div>
                     @endif
                 </form>
@@ -56,10 +56,10 @@
                                         Ações
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-secondary" href="{{ route('ideias.show', ['ideia' => $idea->id]) }}">Visualizar</a></li>
-                                        <li><a class="dropdown-item text-primary" href="{{ route('ideias.edit', ['ideia' => $idea->id]) }}">Editar</a></li>
+                                        <li><a class="dropdown-item text-secondary" href="{{ route('ideas.show', ['ideia' => $idea->id]) }}">Visualizar</a></li>
+                                        <li><a class="dropdown-item text-primary" href="{{ route('ideas.edit', ['ideia' => $idea->id]) }}">Editar</a></li>
                                         <li>
-                                            <form id="form-{{ $idea->id }}" method="POST" action="{{ route('ideias.destroy', ['ideia' => $idea->id]) }}">
+                                            <form id="form-{{ $idea->id }}" method="POST" action="{{ route('ideas.destroy', ['ideia' => $idea->id]) }}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-{{ $idea->id }}').submit()">Deletar</a>

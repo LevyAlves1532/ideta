@@ -28,7 +28,15 @@ Route::middleware('auth')->group(function() {
     ]);
     Route::post('/ideias/categoria', [IdeaController::class, 'addCategoryIdea'])->name('ideas.add-category');
     Route::delete('/ideias/categoria/{categoria}', [IdeaController::class, 'removeCategoryIdea'])->name('ideas.remove-category');
-    Route::resource('/ideias', IdeaController::class);
+    Route::resource('/ideias', IdeaController::class)->names([
+        'index' => 'ideas.index',
+        'create' => 'ideas.create',
+        'store' => 'ideas.store',
+        'show' => 'ideas.show',
+        'edit' => 'ideas.edit',
+        'update' => 'ideas.update',
+        'destroy' => 'ideas.destroy',
+    ]);
 
     Route::get('/notas/{id}', [NoteController::class, 'show'])->name('notas.show');
 });
