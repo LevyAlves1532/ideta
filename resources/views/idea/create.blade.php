@@ -2,7 +2,7 @@
     'navItemActive' => 'categories',
 ])
 
-@section('sufix', 'Criar Categoria')
+@section('sufix', 'Criar Ideia')
 
 @section('body')
     <div class="container p-3">

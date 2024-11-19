@@ -210,6 +210,15 @@ class IdeaController extends Controller
     {
         $body = $request->only('idea_id');
         $idea = Idea::where('id', $body['idea_id'])->where('user_id', Auth::user()->id)->first();
+        $category = Category::where('id', $id)->first();
+
+        if ($category->is_default) {
+            return redirect()
+                ->back()
+                ->with('system_errors', [
+                    'Essa categoria não pode ser desvinculada!',
+                ]);
+        }
 
         $body['category_id'] = $id;
 
