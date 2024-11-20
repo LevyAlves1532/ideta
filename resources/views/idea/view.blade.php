@@ -6,9 +6,11 @@
 
 @section('body')
     <div class="container p-3">
+        @component('_components.system-errors')
+        @endcomponent
         <div class="d-flex mt-3" style="justify-content: space-between;align-items:center">
             <h2>Visualizar Ideia</h2>
-            <a href="{{ route('ideias.index') }}" class="btn btn-primary float-right">Voltar</a>
+            <a href="{{ route('ideas.index') }}" class="btn btn-primary float-right">Voltar</a>
         </div>
         <hr>
         <div style="max-width: 450px; margin-top: 16px; margin-left:auto; margin-right: auto;">
@@ -47,12 +49,14 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <form method="POST" action="{{ route('ideas.remove-category', ['categoria' => $category->id]) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="hidden" name="idea_id" value="{{ $idea->id }}">
-                                        <button class="btn btn-danger">Desvincular</button>
-                                    </form>
+                                    @if (!$category->is_default)
+                                        <form method="POST" action="{{ route('ideas.remove-category', ['categoria' => $category->id]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="idea_id" value="{{ $idea->id }}">
+                                            <button class="btn btn-danger">Desvincular</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

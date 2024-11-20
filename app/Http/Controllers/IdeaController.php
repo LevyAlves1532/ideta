@@ -16,12 +16,26 @@ class IdeaController extends Controller
      */
     public function index(Request $request)
     {
+        $userId = Auth::user()->id;
         $search = $request->get('search') ?? '';
-        $ideas = Idea::where('user_id', Auth::user()->id)->where('title', 'LIKE', '%' . $search . '%')->paginate(5);
+        $categoryId = $request->get('category_id') ?? '';
+
+        $ideas = Idea::where('user_id', $userId)
+            ->where('title', 'LIKE', '%' . $search . '%')
+            ->when($categoryId, function ($query, $categoryId) {
+                if (!empty($categoryId)) {
+                    $query->whereHas('categories', function ($query) use ($categoryId) {
+                        $query->where('categories.id', $categoryId);
+                    });
+                }
+            })
+            ->paginate(5);
+        $categories = Category::where('user_id', $userId)->get();
 
         return view('idea.index', [
             'ideas' => $ideas,
             'request' => $request->all(),
+            'categories' => $categories,
         ]);
     }
 
@@ -47,17 +61,21 @@ class IdeaController extends Controller
 
         if ($validated->fails()) {
             return redirect()
-                ->route('ideias.create')
+                ->route('ideas.create')
                 ->withErrors($validated->errors())
                 ->withInput();
         }
 
         $body['user_id'] = Auth::user()->id;
 
+        $category = Category::where('user_id', $body['user_id'])->where('is_default', true)->first();
+
+        $body['categories'][] = "{$category->id}";
+
         $idea = Idea::create($body);
         $idea->categories()->attach($body['categories']);
 
-        return redirect()->route('ideias.edit', [
+        return redirect()->route('ideas.edit', [
             'ideia' => $idea->id,
         ]);
     }
@@ -119,9 +137,10 @@ class IdeaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        $userId = Auth::user()->id;
+        $idea = Idea::where('id', $id)->where('user_id', $userId)->first();
 
-        if (!$idea) return redirect()->route('ideias.index');
+        if (!$idea) return redirect()->route('ideas.index');
 
         $body = $request->only('title', 'categories');
 
@@ -131,7 +150,7 @@ class IdeaController extends Controller
 
         if ($validated->fails()) {
             return redirect()
-                ->route('ideias.edit', ['ideia' => $idea->id])
+                ->route('ideas.edit', ['ideia' => $idea->id])
                 ->withErrors($validated->errors())
                 ->withInput();
         }
@@ -141,10 +160,12 @@ class IdeaController extends Controller
         ]);
 
         if (isset($body['categories'])) {
+            $category = Category::where('user_id', $userId)->where('is_default', true)->first();
+            $body['categories'][] = "{$category->id}";
             $idea->categories()->sync($body['categories']);
         }
 
-        return redirect()->route('ideias.edit', ['ideia' => $idea->id]);
+        return redirect()->route('ideas.edit', ['ideia' => $idea->id]);
     }
 
     /**
@@ -154,13 +175,13 @@ class IdeaController extends Controller
     {
         $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
 
-        if (!$idea) return redirect()->route('ideias.index');
+        if (!$idea) return redirect()->route('ideas.index');
 
         $idea->categories()->detach();
 
         $idea->delete();
 
-        return redirect()->route('ideias.index');
+        return redirect()->route('ideas.index');
     }
 
     public function addCategoryIdea(Request $request)
@@ -168,7 +189,7 @@ class IdeaController extends Controller
         $body = $request->only('idea_id', 'category_id');
         $idea = Idea::where('id', $body['idea_id'])->where('user_id', Auth::user()->id)->first();
 
-        if (!$idea) return redirect()->route('ideias.index');
+        if (!$idea) return redirect()->route('ideas.index');
 
         $validated = $this->validateRelations($body);
 
@@ -180,7 +201,7 @@ class IdeaController extends Controller
 
         $idea->categories()->attach($body['category_id']);
 
-        return redirect()->route('ideias.show', [
+        return redirect()->route('ideas.show', [
             'ideia' => $idea->id,
         ]);
     }
@@ -189,10 +210,19 @@ class IdeaController extends Controller
     {
         $body = $request->only('idea_id');
         $idea = Idea::where('id', $body['idea_id'])->where('user_id', Auth::user()->id)->first();
+        $category = Category::where('id', $id)->first();
+
+        if ($category->is_default) {
+            return redirect()
+                ->back()
+                ->with('system_errors', [
+                    'Essa categoria não pode ser desvinculada!',
+                ]);
+        }
 
         $body['category_id'] = $id;
 
-        if (!$idea) return redirect()->route('ideias.index');
+        if (!$idea) return redirect()->route('ideas.index');
 
         $validated = $this->validateRelations($body);
 
@@ -204,7 +234,7 @@ class IdeaController extends Controller
 
         $idea->categories()->detach($body['category_id']);
 
-        return redirect()->route('ideias.show', [
+        return redirect()->route('ideas.show', [
             'ideia' => $idea->id,
         ]);
     }
@@ -234,7 +264,6 @@ class IdeaController extends Controller
                     return $query->where('user_id', Auth::user()->id);
                 })
             ],
-            'categories' => 'required|array',
             'categoreis.*' => 'exists:categories,id',
         ];
 
@@ -249,7 +278,14 @@ class IdeaController extends Controller
         ];
 
         if ($isUpdate) {
-            $rules['title'] = $rules['title'] . ',title,' . $body['id'];
+            $rules['title'] = [
+                'required',
+                'min:3',
+                'max:255',
+                Rule::unique('ideas')->where(function($query) {
+                    return $query->where('user_id', Auth::user()->id);
+                })->ignore($body['id']),
+            ];
         }
 
         return Validator::make($body, $rules, $messages);
