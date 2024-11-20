@@ -176,6 +176,14 @@ class CategoryController extends Controller
 
         if (!$category) return redirect()->route('categories.index');
 
+        if ($category->is_default) {
+            return redirect()
+                ->back()
+                ->with('system_errors', [
+                    'Essa ideia não pode ser desvinculada desta categoria!',
+                ]);
+        }
+
         $validated = $this->validateRelations($body);
 
         if ($validated->fails()) {

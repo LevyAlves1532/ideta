@@ -60,13 +60,15 @@
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item text-secondary" href="{{ route('categories.show', ['categoria' => $category->id]) }}">Visualizar</a></li>
                                         <li><a class="dropdown-item text-primary" href="{{ route('categories.edit', ['categoria' => $category->id]) }}">Editar</a></li>
-                                        <li>
-                                            <form id="form-{{ $category->id }}" method="POST" action="{{ route('categories.destroy', ['categoria' => $category->id]) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-{{ $category->id }}').submit()">Deletar</a>
-                                            </form>
-                                        </li>
+                                        @if (!$category->is_default)
+                                            <li>
+                                                <form id="form-{{ $category->id }}" method="POST" action="{{ route('categories.destroy', ['categoria' => $category->id]) }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-{{ $category->id }}').submit()">Deletar</a>
+                                                </form>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </td>
