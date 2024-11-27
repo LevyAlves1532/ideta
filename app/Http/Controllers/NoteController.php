@@ -27,7 +27,15 @@ class NoteController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request, $idea_id)
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request, $idea_id)
     {
         $user_id = Auth::user()->id;
         $body = $request->only('body');
@@ -58,14 +66,6 @@ class NoteController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(string $id)
@@ -92,9 +92,29 @@ class NoteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($idea_id, $id)
     {
-        //
+        $user_id = Auth::user()->id;
+
+        $note = Note::where('idea_id', $idea_id)
+            ->where('id', $id)
+            ->where('user_id', $user_id)
+            ->first();
+
+        if ($note) {
+            $note->delete();
+
+            $idea = Idea::where('id', $idea_id)
+                ->where('user_id', $user_id)
+                ->first();
+
+            foreach ($idea->notes()->orderBy('position')->get() as $key => $note) {
+                $note->position = $key;
+                $note->save();
+            }
+        }
+
+        return redirect()->route('notes.index', ['idea_id' => $idea_id]);
     }
 
     private function validate($body)

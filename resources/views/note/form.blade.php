@@ -1,6 +1,6 @@
 <div class="modal fade" id="modal-add-note" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form method="POST" action="{{ route('notes.create', ['idea_id' => $idea->id]) }}" class="modal-content">
+        <form method="POST" action="{{ route('notes.store', ['idea_id' => $idea->id]) }}" class="modal-content">
             @csrf
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Sua nota</h1>
