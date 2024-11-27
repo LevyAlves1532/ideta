@@ -39,4 +39,5 @@ Route::middleware('auth')->group(function() {
     ]);
 
     Route::get('/notas/{idea_id}', [NoteController::class, 'index'])->name('notes.index');
+    Route::post('/notas/{idea_id}', [NoteController::class, 'create'])->name('notes.create');
 });
