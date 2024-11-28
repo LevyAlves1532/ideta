@@ -23,12 +23,12 @@
                     </form>
 
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary">
+                        <a href="{{ route('notes.down', ['idea_id' => $idea->id, 'note_id' => $note->id]) }}" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" style="height: 14px; fill: white;" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
-                        </button>
-                        <button type="button" class="btn btn-primary">
+                        </a>
+                        <a href="{{ route('notes.up', ['idea_id' => $idea->id, 'note_id' => $note->id]) }}" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" style="height: 14px; fill: white;" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">

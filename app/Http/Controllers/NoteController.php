@@ -117,6 +117,41 @@ class NoteController extends Controller
         return redirect()->route('notes.index', ['idea_id' => $idea_id]);
     }
 
+    public function downNote($idea_id, $note_id)
+    {
+        $this->changePosition($idea_id, $note_id, true);
+
+        return redirect()->route('notes.index', ['idea_id' => $idea_id]);
+    }
+
+    public function upNote($idea_id, $note_id)
+    {
+        $this->changePosition($idea_id, $note_id);
+
+        return redirect()->route('notes.index', ['idea_id' => $idea_id]);
+    }
+
+    private function changePosition($idea_id, $note_id, $is_down = false)
+    {
+        $note = Note::where('idea_id', $idea_id)
+            ->where('id', $note_id)
+            ->first();
+
+        $noteDestination = Note::where('idea_id', $idea_id)
+            ->where('position', $is_down ? $note->position + 1 : $note->position - 1)
+            ->first();
+
+        $position = $note->position;
+
+        if ($noteDestination && $note) {
+            $note->position = $noteDestination->position;
+            $note->save();
+
+            $noteDestination->position = $position;
+            $noteDestination->save();
+        }
+    }
+
     private function validate($body)
     {
         $rules = [
