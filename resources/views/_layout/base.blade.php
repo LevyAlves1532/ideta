@@ -37,7 +37,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link @isset($navItemActive) {{ $navItemActive === 'ideas' ? 'active' : '' }} @endisset" aria-current="page" href="{{ route('ideas.index') }}">Ideas</a>
+                                <a class="nav-link @isset($navItemActive) {{ $navItemActive === 'ideas' ? 'active' : '' }} @endisset" aria-current="page" href="{{ route('ideas.index') }}">Ideias</a>
                             </li>
                         </ul>
                     </div>
