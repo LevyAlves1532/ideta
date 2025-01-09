@@ -39,6 +39,10 @@
                             <li class="nav-item">
                                 <a class="nav-link @isset($navItemActive) {{ $navItemActive === 'ideas' ? 'active' : '' }} @endisset" aria-current="page" href="{{ route('ideas.index') }}">Ideias</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link @isset($navItemActive) {{ $navItemActive === 'profile' ? 'active' : '' }} @endisset" aria-current="page" href="{{ route('profile.show', ['user_id' => auth()->user()->id]) }}">Perfil</a>
+                            </li>
                         </ul>
                     </div>
                 </div>

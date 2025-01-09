@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AuthController::class, 'index'])->name('login');
@@ -43,4 +44,6 @@ Route::middleware('auth')->group(function() {
     Route::get('/notas/{idea_id}/{note_id}/up', [NoteController::class, 'upNote'])->name('notes.up');
     Route::post('/notas/{idea_id}', [NoteController::class, 'store'])->name('notes.store');
     Route::delete('/notas/{idea_id}/{note_id}', [NoteController::class, 'destroy'])->name('notes.destroy');
+
+    Route::get('/perfil/{user_id}', [UserController::class, 'show'])->name('profile.show');
 });
