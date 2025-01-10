@@ -1,9 +1,7 @@
-<form method="POST" action="#">
+<form method="POST" action="{{ route('profile.update', ['user_id' => $user->id]) }}">
     @if (!isset($isVisible))
         @csrf
-        @if (isset($user))
-            @method('PUT')
-        @endif
+        @method('PUT')
     @endif
     <div class="mb-3">
         <label for="name" class="form-label">Nome</label>

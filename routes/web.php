@@ -46,4 +46,6 @@ Route::middleware('auth')->group(function() {
     Route::delete('/notas/{idea_id}/{note_id}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
     Route::get('/perfil/{user_id}', [UserController::class, 'show'])->name('profile.show');
+    Route::get('/perfil/{user_id}/editar', [UserController::class, 'edit'])->name('profile.edit');
+    Route::put('/perfil/{user_id}/update', [UserController::class, 'update'])->name('profile.update');
 });
