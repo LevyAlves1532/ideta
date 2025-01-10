@@ -1,4 +1,6 @@
-@extends('_layout.base')
+@extends('_layout.base', [
+    'navItemActive' => 'profile',
+])
 
 @section('sufix', 'Perfil')
 

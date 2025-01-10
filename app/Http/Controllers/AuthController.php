@@ -82,6 +82,12 @@ class AuthController extends Controller
         }
     }
 
+    public function destroy()
+    {
+        Auth::logout();
+        return redirect()->route('index');
+    }
+
     private function validate($body, $isRegister = false)
     {
         $rules = [

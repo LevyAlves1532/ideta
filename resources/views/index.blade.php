@@ -6,7 +6,7 @@
 
 @section('body')
     <div class="container py-3">
-        <h2 class="mt-3">Seja Bem-Vindo ao Ideta 1.0</h2>
+        <h2 class="mt-3">Seja Bem-Vindo ao Ideta 1.1.0</h2>
         <hr>
 
         <div class="d-flex">

@@ -52,7 +52,7 @@ class UserController extends Controller
 
         if ($validated->fails()) {
             return redirect()
-                ->route('profile.edit', ['user_id' => Auth::us])
+                ->route('profile.edit', ['user_id' => Auth::user()->id])
                 ->withErrors($validated->errors())
                 ->withInput();
         }

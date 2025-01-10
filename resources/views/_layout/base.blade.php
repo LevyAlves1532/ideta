@@ -43,6 +43,10 @@
                             <li class="nav-item">
                                 <a class="nav-link @isset($navItemActive) {{ $navItemActive === 'profile' ? 'active' : '' }} @endisset" aria-current="page" href="{{ route('profile.show', ['user_id' => auth()->user()->id]) }}">Perfil</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="{{ route('logout') }}">Sair</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
