@@ -9,10 +9,13 @@
 
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.bunny.net">
+        <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css" />
         <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+        @yield('header')
     </head>
     <body>
         <nav class="navbar py-3" style="background-color: whitesmoke">
@@ -54,5 +57,8 @@
         </nav>
 
         @yield('body')
+
+        <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js"></script>
+        @yield('scripts')
     </body>
 </html>

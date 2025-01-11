@@ -31,8 +31,8 @@
                         </a>
                     </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text">{{ $note->body }}</p>
+                <div class="card-body note-body">
+                    {!! $note->body !!}
                 </div>
             </div>
         @endforeach
@@ -42,4 +42,11 @@
         ])
         @endcomponent
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        const CKEDITOR_KEY = "{{$ckeditor_key}}";
+    </script>
+    <script src="{{asset('assets/js/views/note.js')}}"></script>
 @endsection

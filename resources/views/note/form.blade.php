@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-add-note" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 768px;">
         <form method="POST" action="{{ route('notes.store', ['idea_id' => $idea->id]) }}" class="modal-content">
             @csrf
             <div class="modal-header">

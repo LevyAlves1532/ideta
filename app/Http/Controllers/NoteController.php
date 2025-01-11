@@ -21,6 +21,7 @@ class NoteController extends Controller
 
         return view('note.index', [
             'idea' => $idea,
+            'ckeditor_key' => env('CKEDITOR_KEY_DEVELOPMENT'),
         ]);
     }
 
