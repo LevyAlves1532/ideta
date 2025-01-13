@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Traits\TimeUseSystemTrait;
 
 class AuthController extends Controller
 {
@@ -28,6 +29,8 @@ class AuthController extends Controller
             ]);
 
             if ($isUser) {
+                TimeUseSystemTrait::saveTime();
+
                 return redirect()
                     ->route('index');
             } else {
@@ -84,6 +87,13 @@ class AuthController extends Controller
 
     public function destroy()
     {
+        $user = Auth::user();
+
+        $metric = $user->metric;
+
+        $metric->total_usage_time += TimeUseSystemTrait::saveTime();
+        $metric->save();
+
         Auth::logout();
         return redirect()->route('index');
     }

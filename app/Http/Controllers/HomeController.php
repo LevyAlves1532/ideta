@@ -34,6 +34,7 @@ class HomeController extends Controller
             ->get();
 
         $categoriesLatestIdeas = Category::query()
+            ->where('user_id', Auth::user()->id)
             ->whereIn('id', function ($query) use ($latestIdeas) {
                 $query->select('category_id')
                       ->from('categories_ideas');

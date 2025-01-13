@@ -126,7 +126,9 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        $user =  Auth::user();
+
+        $category = Category::where('id', $id)->where('user_id', $user->id)->first();
 
         if (!$category) return redirect()->route('categories.index');
 
@@ -139,6 +141,13 @@ class CategoryController extends Controller
         }
 
         $category->ideas()->detach();
+
+        $metric = $user->metric;
+
+        if ($metric->last_category_created === $category->id) {
+            $metric->last_category_created = null;
+            $metric->save();
+        }
 
         $category->delete();
 
@@ -215,14 +224,20 @@ class CategoryController extends Controller
 
     private function validate($body, $isUpdate = false)
     {
+        $rule = Rule::unique('categories')->where(function($query) {
+            return $query->where('user_id', Auth::user()->id);
+        });
+
+        if ($isUpdate) {
+            $rule->ignore($body['id']);
+        }
+
         $rules = [
             'name' => [
                 'required',
                 'min:3',
                 'max:255',
-                Rule::unique('categories')->where(function($query) {
-                    return $query->where('user_id', Auth::user()->id);
-                })
+                $rule
             ],
             'color' => 'required|hex_color'
         ];
@@ -235,10 +250,6 @@ class CategoryController extends Controller
             'color.required' => 'O campo de cor é obrigatório',
             'color.hex_color' => 'O valor do campo cor deve ser uma cor hexadecimal',
         ];
-
-        if ($isUpdate) {
-            $rules['name'] = $rules['name'] . ',name,' . $body['id'];
-        }
 
         return Validator::make($body, $rules, $messages);
     }

@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Observers\CategoryObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([CategoryObserver::class])]
 class Category extends Model
 {
     protected $fillable = [
@@ -12,6 +15,16 @@ class Category extends Model
         'color',
         'is_default',
     ];
+
+    public function userMetric()
+    {
+        return $this->hasOne(UserMetric::class, 'last_category_created');
+    }
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'modelable');
+    }
 
     public function user()
     {

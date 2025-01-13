@@ -2,14 +2,22 @@
 
 namespace App\Models;
 
+use App\Observers\IdeaObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([IdeaObserver::class])]
 class Idea extends Model
 {
     protected $fillable = [
         'user_id',
         'title',
     ];
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'modelable');
+    }
 
     public function user()
     {

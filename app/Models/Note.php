@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Observers\NoteObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 
+#[ObservedBy([NoteObserver::class])]
 class Note extends Model
 {
     protected $fillable = [
@@ -12,6 +15,11 @@ class Note extends Model
         'body',
         'position',
     ];
+
+    public function logs()
+    {
+        return $this->morphMany(Log::class, 'modelable');
+    }
 
     public function user()
     {
