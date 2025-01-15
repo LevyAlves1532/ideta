@@ -6,7 +6,7 @@
 
 @section('body')
     <div class="container py-3">
-        <h2 class="mt-3">Seja Bem-Vindo ao Ideta 1.4.2</h2>
+        <h2 class="mt-3">Seja Bem-Vindo ao Ideta 1.4.3</h2>
         <hr>
 
         <div class="d-flex">
@@ -63,6 +63,13 @@
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" href="{{ route('notes.index', ['idea_id' => $idea->id]) }}">Ver Anotações</a></li>
+                                        <li>
+                                            <form id="form-share-{{ $idea->id }}" method="POST" action="{{ route('ideas.share-idea') }}">
+                                                @csrf
+                                                <input type="hidden" name="idea_id" value="{{ $idea->id }}">
+                                                <a class="dropdown-item" href="#" onclick="document.getElementById('form-share-{{ $idea->id }}').submit()">Compartilhar</a>
+                                            </form>
+                                        </li>
                                     </ul>
                                 </div>
                             </td>
