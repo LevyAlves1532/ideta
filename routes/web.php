@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function() {
         'destroy' => 'categories.destroy',
     ]);
     Route::post('/ideias/categoria', [IdeaController::class, 'addCategoryIdea'])->name('ideas.add-category');
+    Route::get('/ideias/copia/{token}', [IdeaController::class, 'copyIdea'])->name('ideas.copy');
+    Route::post('/ideias/compartilhar', [IdeaController::class, 'shareIdea'])->name('ideas.share-idea');
     Route::delete('/ideias/categoria/{categoria}', [IdeaController::class, 'removeCategoryIdea'])->name('ideas.remove-category');
     Route::resource('/ideias', IdeaController::class)->names([
         'index' => 'ideas.index',
@@ -40,6 +42,7 @@ Route::middleware('auth')->group(function() {
     ]);
 
     Route::get('/notas/{idea_id}', [NoteController::class, 'index'])->name('notes.index');
+    Route::get('/notas/compartilhada/{token}', [NoteController::class, 'ideaShared'])->name('notes.idea-shared');
     Route::get('/notas/{idea_id}/{note_id}/down', [NoteController::class, 'downNote'])->name('notes.down');
     Route::get('/notas/{idea_id}/{note_id}/up', [NoteController::class, 'upNote'])->name('notes.up');
     Route::post('/notas/{idea_id}', [NoteController::class, 'store'])->name('notes.store');

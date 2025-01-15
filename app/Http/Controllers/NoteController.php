@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Idea;
+use App\Models\IdeaShare;
 use Illuminate\Http\Request;
 use App\Models\Note;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -151,6 +153,23 @@ class NoteController extends Controller
             $noteDestination->position = $position;
             $noteDestination->save();
         }
+    }
+
+    public function ideaShared(string $token)
+    {
+        $ideaShare = IdeaShare::where('token', $token)->where('expires_in', '>', Carbon::now())->first();
+
+        if (!$ideaShare) {
+            return redirect()->back();
+        }
+
+        return view('note.index', [
+            'idea' => $ideaShare->idea,
+            'user' => $ideaShare->user,
+            'ideaShare' => $ideaShare,
+            'ckeditor_key' => env('CKEDITOR_KEY_DEVELOPMENT'),
+            'isShared' => true,
+        ]);
     }
 
     private function validate($body)

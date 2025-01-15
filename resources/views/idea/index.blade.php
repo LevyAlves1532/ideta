@@ -59,14 +59,21 @@
                                         <li><a class="dropdown-item text-secondary" href="{{ route('ideas.show', ['ideia' => $idea->id]) }}">Visualizar</a></li>
                                         <li><a class="dropdown-item text-primary" href="{{ route('ideas.edit', ['ideia' => $idea->id]) }}">Editar</a></li>
                                         <li>
-                                            <form id="form-{{ $idea->id }}" method="POST" action="{{ route('ideas.destroy', ['ideia' => $idea->id]) }}">
+                                            <form id="form-delete-{{ $idea->id }}" method="POST" action="{{ route('ideas.destroy', ['ideia' => $idea->id]) }}">
                                                 @csrf
                                                 @method('DELETE')
-                                                <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-{{ $idea->id }}').submit()">Deletar</a>
+                                                <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-delete-{{ $idea->id }}').submit()">Deletar</a>
                                             </form>
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li><a class="dropdown-item" href="{{ route('notes.index', ['idea_id' => $idea->id]) }}">Ver Anotações</a></li>
+                                        <li>
+                                            <form id="form-share-{{ $idea->id }}" method="POST" action="{{ route('ideas.share-idea') }}">
+                                                @csrf
+                                                <input type="hidden" name="idea_id" value="{{ $idea->id }}">
+                                                <a class="dropdown-item" href="#" onclick="document.getElementById('form-share-{{ $idea->id }}').submit()">Compartilhar</a>
+                                            </form>
+                                        </li>
                                     </ul>
                                 </div>
                             </td>

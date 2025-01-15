@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Idea;
+use App\Models\IdeaShare;
+use App\Models\Note;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -179,6 +182,10 @@ class IdeaController extends Controller
 
         $idea->categories()->detach();
 
+        foreach ($idea->notes as $note) {
+            $note->delete();
+        }
+
         $idea->delete();
 
         return redirect()->route('ideas.index');
@@ -237,6 +244,80 @@ class IdeaController extends Controller
         return redirect()->route('ideas.show', [
             'ideia' => $idea->id,
         ]);
+    }
+
+    public function shareIdea(Request $request)
+    {
+        $body = $request->only('idea_id');
+
+        $validated = Validator::make($body, [
+            'idea_id' => 'required|exists:ideas,id',
+        ], [
+            'idea_id.required' => 'Tarefa não foi enviada',
+            'idea_id.exists' => 'Essa tarefa não existe',
+        ]);
+
+        if ($validated->fails()) {
+            return redirect()
+                ->route('ideas.index')
+                ->withErrors($validated->errors());
+        }
+
+        $token = '';
+
+        $idea = Idea::where('id', $body['idea_id'])->where('user_id', Auth::user()->id)->first();
+        $ideaShare = IdeaShare::where('idea_id', $body['idea_id'])->where('expires_in', '>', Carbon::now())->first();
+
+        if (!$idea) {
+            return redirect()
+                ->route('ideas.index')
+                ->withErrors(['system' => 'Está tarefa não pertence a você']);
+        }
+
+        if (!$ideaShare) {
+            $token = md5(time());
+
+            $idea = IdeaShare::create([
+                'user_id' => Auth::user()->id,
+                'idea_id' => $idea->id,
+                'token' => $token,
+                'expires_in' => Carbon::now()->addDay(),
+            ]);
+        } else {
+            $token = $ideaShare->token;
+        }
+
+        return redirect()->route('notes.idea-shared', ['token' => $token]);
+    }
+
+    public function copyIdea(string $token)
+    {
+        $ideaShare = IdeaShare::where('token', $token)->where('expires_in', '>', Carbon::now())->first();
+
+        if (!$ideaShare) {
+            return redirect()->back();
+        }
+
+        $user_id = Auth::user()->id;
+        $category = Category::where('user_id', $user_id)->where('is_default', true)->first();
+
+        $idea = Idea::create([
+            'user_id' => $user_id,
+            'title' => $ideaShare->idea->title,
+        ]);
+
+        $idea->categories()->attach($category->id);
+
+        foreach ($ideaShare->idea->notes as $note) {
+            Note::create([
+                'user_id' => $user_id,
+                'idea_id' => $idea->id,
+                'body' => $note->body,
+                'position' => $note->position,
+            ]);
+        }
+
+        return redirect()->route('notes.index', ['idea_id' => $idea->id]);
     }
 
     private function validateRelations($body)

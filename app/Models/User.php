@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->hasMany(Log::class);
     }
 
+    public function ideasShares()
+    {
+        return $this->hasMany(IdeaShare::class);
+    }
+
     public function metric()
     {
         return $this->hasOne(UserMetric::class);

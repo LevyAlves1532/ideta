@@ -2,7 +2,11 @@
 
 namespace App\Observers;
 
+use App\Models\Category;
+use App\Models\Idea;
+use App\Models\Note;
 use App\Models\User;
+use App\Models\UserMetric;
 use App\Traits\TimeUseSystemTrait;
 
 class UserObserver
@@ -12,7 +16,15 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        //
+        $user_id = $user->id;
+
+        UserMetric::create([
+            'user_id' => $user_id,
+            'total_categories' => Category::where('user_id', $user_id)->count(),
+            'total_ideas' => Idea::where('user_id', $user_id)->count(),
+            'total_notes' => Note::where('user_id', $user_id)->count(),
+            'last_category_created' => $user->categories()->orderBy('created_at', 'desc')->first()->id,
+        ]);
     }
 
     /**

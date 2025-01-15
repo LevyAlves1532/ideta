@@ -14,6 +14,11 @@ class Idea extends Model
         'title',
     ];
 
+    public function ideasShares()
+    {
+        return $this->hasMany(IdeaShare::class);
+    }
+
     public function logs()
     {
         return $this->morphMany(Log::class, 'modelable');
