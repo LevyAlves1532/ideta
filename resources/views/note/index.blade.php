@@ -6,7 +6,7 @@
 @section('body')
     <div class="container py-3">
         @if (!empty($isShared))
-            <p class="lead">Ideia de: {{ $user->name }}</p>
+            <p class="lead">Ideia de: <a href="{{ route('profile.show', ['user_id' => $user->id]) }}">{{ $user->name }}</a></p>
         @endif
         <h2 class="mt-3">{{ $idea->title }}</h2>
         @if (empty($isShared))
