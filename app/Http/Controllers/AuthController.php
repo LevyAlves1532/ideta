@@ -54,11 +54,6 @@ class AuthController extends Controller
         return view('register');
     }
 
-    public function oldCreate()
-    {
-        return view('old-register');
-    }
-
     public function store(Request $request)
     {
         $body = $request->only('name', 'email', 'password', 'password_confirmation');
