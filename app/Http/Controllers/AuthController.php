@@ -54,10 +54,15 @@ class AuthController extends Controller
         return view('register');
     }
 
+    public function oldCreate()
+    {
+        return view('old-register');
+    }
+
     public function store(Request $request)
     {
-        $body = $request->only('name', 'email', 'password');
-
+        $body = $request->only('name', 'email', 'password', 'password_confirmation');
+        
         $validated = $this->validate($body, true);
 
         if (!$validated->fails()) {
@@ -108,11 +113,13 @@ class AuthController extends Controller
         if ($isRegister) {
             $rules['name'] = 'required|min:4|max:255';
             $rules['email'] = $rules['email'] . '|unique:users';
+            $rules['password'] = $rules['password'] . '|confirmed';
 
             $messages['name.required'] = 'O campo de nome é obrigatório';
             $messages['name.min'] = 'O campo de nome deve ter no mínimo 4 caracteres';
             $messages['name.max'] = 'O campo de nome deve ter no máximo 255 caracteres';
             $messages['email.unique'] = 'Já existe um usuário com esse e-mail';
+            $messages['password.confirmed'] = 'Senhas não coincidem!';
         }
 
         return Validator::make($body, $rules, $messages);
