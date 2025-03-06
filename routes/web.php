@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::get('/old-login', [AuthController::class, 'oldIndex'])->name('old-login');
 Route::post('/login', [AuthController::class, 'show'])->name('login.post');
 Route::get('/registre-se', [AuthController::class, 'create'])->name('register');
 Route::post('/registre-se', [AuthController::class, 'store'])->name('register.post');
