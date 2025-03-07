@@ -52,5 +52,5 @@ Route::middleware('auth')->group(function() {
     Route::get('/perfil/{user_id}/editar', [UserController::class, 'edit'])->name('profile.edit');
     Route::put('/perfil/{user_id}/update', [UserController::class, 'update'])->name('profile.update');
 
-    Route::get('/logout', [AuthController::class, 'destroy'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
 });

@@ -40,6 +40,7 @@ class HomeController extends Controller
                       ->from('categories_ideas');
             })
             ->distinct()
+            ->take(5)
             ->get();
 
         return view('index', [
