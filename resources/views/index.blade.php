@@ -1,5 +1,10 @@
 @extends('_layout.main-adminlte')
 
+@section('content_header')
+    <h2>Seja Bem-Vindo ao Note Free</h2>
+    <hr>
+@endsection
+
 @section('content')    
     <div class="row">
         <div class="col-md-6">
@@ -34,14 +39,14 @@
                                                 <form id="form-{{ $latestIdea->id }}" method="POST" action="{{ route('ideas.destroy', ['ideia' => $latestIdea->id]) }}">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-{{ $latestIdea->id }}').submit()">Deletar</a>
+                                                    <button class="dropdown-item text-danger" onclick="document.getElementById('form-{{ $latestIdea->id }}').submit()">Deletar</button>
                                                 </form>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item text-info" href="{{ route('notes.index', ['idea_id' => $latestIdea->id]) }}">Ver Anotações</a>
                                                 <form id="form-share-{{ $latestIdea->id }}" method="POST" action="{{ route('ideas.share-idea') }}">
                                                     @csrf
                                                     <input type="hidden" name="idea_id" value="{{ $latestIdea->id }}">
-                                                    <a class="dropdown-item text-success" href="#" onclick="document.getElementById('form-share-{{ $latestIdea->id }}').submit()">Compartilhar</a>
+                                                    <button class="dropdown-item text-success" onclick="document.getElementById('form-share-{{ $latestIdea->id }}').submit()">Compartilhar</button>
                                                 </form>
                                             </div>
                                         </div>

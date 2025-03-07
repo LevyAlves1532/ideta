@@ -18,11 +18,14 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search') ?? '';
+        $qtd_rows = $request->get('qtd_rows') ?? '5';
 
-        $categories = Category::where('user_id', Auth::user()->id)->where('name', 'LIKE', '%' . $search . '%')->paginate(5);
+        $categories = Category::where('user_id', Auth::user()->id)->where('name', 'LIKE', '%' . $search . '%')->paginate($qtd_rows);
         return view('category.index', [
             'categories' => $categories,
             'request' => $request->all(),
+            'qtd_rows' => $qtd_rows,
+            'total' => $categories->toArray()['total'],
         ]);
     }
 

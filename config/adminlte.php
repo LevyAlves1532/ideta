@@ -300,10 +300,6 @@ return [
 
     'menu' => [
         [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
-        [
             'text' => 'Home',
             'url' => '/',
             'icon' => 'fas fa-fw fa-home'

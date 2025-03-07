@@ -1,10 +1,17 @@
 
 @extends('adminlte::page')
 
-@section('content_header')
-    <h2>Seja Bem-Vindo ao Note Free</h2>
-    <hr>
-    @yield('main_content_header')
+@section('usermenu_header')
+    <div class="p-2">
+        <ul class="nav nav-pills nav-sidebar flex-column">
+            <li class="nav-item">
+                <a href="{{ route('profile.show', ['user_id' => auth()->id()]) }}" class="nav-link">
+                    <i class="fas fa-fw fa-user-circle"></i>
+                    <p>Meu Perfil</p>
+                </a>
+            </li>
+        </ul>
+    </div>
 @endsection
 
 @section('content_top_nav_left')
