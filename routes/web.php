@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function() {
         'update' => 'categories.update',
         'destroy' => 'categories.destroy',
     ]);
+    Route::get('/old/categorias/{id}', [CategoryController::class, 'oldShow']);
     Route::post('/ideias/categoria', [IdeaController::class, 'addCategoryIdea'])->name('ideas.add-category');
     Route::get('/ideias/copia/{token}', [IdeaController::class, 'copyIdea'])->name('ideas.copy');
     Route::post('/ideias/compartilhar', [IdeaController::class, 'shareIdea'])->name('ideas.share-idea');

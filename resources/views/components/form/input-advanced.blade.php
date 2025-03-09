@@ -8,6 +8,8 @@
                 'name' => $name,
                 'placeholder' => $placeholder ?? '',
                 'type' => $type ?? 'text',
+                'read_only' => $read_only ?? false,
+                'value' => $value ?? '',
             ])
             @endcomponent                
             <div class="input-group-prepend">
@@ -23,6 +25,8 @@
             'name' => $name,
             'placeholder' => $placeholder ?? '',
             'type' => $type ?? 'text',
+            'read_only' => $read_only ?? false,
+            'value' => $value ?? '',
         ])
         @endcomponent 
     @endif

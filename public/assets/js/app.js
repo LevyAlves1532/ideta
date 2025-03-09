@@ -24,6 +24,9 @@
         }
     }
 
+    /**
+     * Change quantity from rows in the table
+     */
     const selectQtdRows = document.getElementById('qtd-rows');
 
     if (selectQtdRows) {
@@ -31,8 +34,28 @@
 
         function filterQtdRows() {
             const url = window.location.href;
-
             window.location.href = url + (url.includes('?') ? '&qtd_rows=' + this.value : '?qtd_rows=' + this.value);
+        }
+    }
+
+    const modalDelete = document.getElementById('modal-delete');
+
+    if (modalDelete) {
+        const btnsDeleteModalConfirm = document.querySelectorAll('[data-target="#modal-delete"]');
+    
+        if (btnsDeleteModalConfirm.length > 0) {
+            btnsDeleteModalConfirm.forEach(btn => {
+                btn.onclick = addActionFormDeleteModal;
+            });
+        }
+    
+        function addActionFormDeleteModal() {
+            const form = modalDelete.querySelector('form');
+
+            if (form) {
+                form.action = this.dataset.action;
+                console.log(form);
+            }
         }
     }
 })()

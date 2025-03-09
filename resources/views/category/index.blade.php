@@ -1,5 +1,7 @@
 @extends('_layout.main-adminlte')
 
+@section('title', 'Note Free - Categorias')
+
 @section('content_header')
     <h2>Lista de Categorias</h2>
     <hr>
@@ -59,11 +61,7 @@
                             <div class="dropdown-menu" role="menu" style="">
                                 <a class="dropdown-item text-info" href="{{ route('categories.show', ['categoria' => $category->id]) }}">Visualizar</a>
                                 <a class="dropdown-item text-primary" href="{{ route('categories.edit', ['categoria' => $category->id]) }}">Editar</a>
-                                <form id="form-{{ $category->id }}" method="POST" action="{{ route('categories.destroy', ['categoria' => $category->id]) }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="dropdown-item text-danger" onclick="document.getElementById('form-{{ $category->id }}').submit()">Deletar</button>
-                                </form>
+                                <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#modal-delete" data-action="{{ route('categories.destroy', ['categoria' => $category->id]) }}">Deletar</button>
                             </div>
                         </div>
                     </td>
@@ -80,6 +78,7 @@
 
     @component('components.modal.modal-form', [
         'id' => 'modal-filters',
+        'btn_confirm_label' => 'Filtrar',
         'action' => route('categories.index'),
     ])
         @slot('modal_header')
@@ -93,6 +92,23 @@
             'placeholder' => 'Buscar categoria...',
         ])                                
         @endcomponent
+    @endcomponent
+
+    @component('components.modal.modal-form', [
+        'id' => 'modal-delete',
+        'method' => 'post',
+        'btn_type_color_confirm' => 'danger',
+        'btn_type_color_cancel' => 'dark',
+        'btn_confirm_label' => 'Deletar',
+        'action' => '',
+    ])
+        @slot('modal_header')
+            <h4 class="modal-title">Deletar Categoria</h4>
+        @endslot
+
+        @csrf
+        @method('DELETE')
+        <p>Você deseja deletar a categoria?</p>
     @endcomponent
 @endsection
 

@@ -1,73 +1,100 @@
-@extends('_layout.base', [
-    'navItemActive' => 'categories',
-])
+@extends('_layout.main-adminlte')
 
-@section('sufix', 'Visualizar Categoria')
+@section('title', 'Note Free - Visualizar Categoria')
 
-@section('body')
-    <div class="container p-3">
-        @component('_components.system-errors')
-        @endcomponent
+@section('content_header')
+    <h2>Visualizar Categoria</h2>
+    <hr>
+@endsection
 
-        <div class="d-flex mt-3" style="justify-content: space-between;align-items:center">
-            <h2>Visualizar Categoria</h2>
-            <a href="{{ route('categories.index') }}" class="btn btn-primary float-right">Voltar</a>
-        </div>
-        <hr>
-        <div style="max-width: 450px; margin-top: 16px; margin-left:auto; margin-right: auto;">
-            @component('category.form', [
-                'category' => $category,
-                'isVisible' => true,
-            ])
-            @endcomponent
-        </div>
-        <hr>
-        <div class="d-flex mt-3" style="justify-content: space-between;align-items:center">
-            <h2>Ideias da Categoria</h2>
-            @if (!$category->is_default)
-                <button class="btn btn-success float-right" data-bs-toggle="modal" data-bs-target="#modal-add-idea">Vincular Ideia</button>
-            @endif
-        </div>
-        <hr>
-        <div>
-            @if ($ideas->count() > 0)
-                <table class="table table-hover table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">Título</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($ideas as $idea)
-                            <tr>
-                                <td style="vertical-align: middle;">{{ $idea->title }}</td>
-                                <td>
-                                    @if (!$category->is_default)
-                                        <form method="POST" action="{{ route('categories.remove-idea', ['ideia' => $idea->id]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="category_id" value="{{ $category->id }}">
-                                            <button class="btn btn-danger">Desvincular</button>
-                                        </form>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                {{ $ideas->links('pagination::bootstrap-5') }}
-            @else
-                <p class="text-center text-secondary">Não há ideias</p>
-            @endif
+@section('content')
+    <div class="d-flex justify-content-end mb-3">
+        <div class="btn-group">
+            <a href="{{ route('categories.index') }}" class="btn btn-primary">Voltar para Categorias</a>
         </div>
     </div>
 
-    @component('category.relations.add-idea', [
-        'category' => $category,
-        'unrelatedIdeas' => $unrelatedIdeas,
-    ])
+    <div class="row">
+        <div class="col-md-6">
+            @component('components.common.card')
+                @slot('card_header')
+                    <h3 class="mb-0">
+                        Formulário
+                    </h3>
+                @endslot
 
-    @endcomponent
+                <div class="p-3">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            @component('components.form.input-advanced', [
+                                'id' => 'name',
+                                'label' => 'Nome:',
+                                'name' => 'name',
+                                'placeholder' => 'Digite o nome da categoria...',
+                                'read_only' => true,
+                                'value' => $category->name,
+                            ])
+                            @endcomponent
+                        </div>
+
+                        <div class="col-sm-6">
+                            @component('components.form.input-advanced', [
+                                'id' => 'color',
+                                'label' => 'Cor:',
+                                'name' => 'color',
+                                'placeholder' => 'Selecione a cor da categoria...',
+                                'type' => 'color',
+                                'read_only' => true,
+                                'value' => $category->color,
+                            ])
+                            @endcomponent
+                        </div>
+                    </div>
+                </div>
+            @endcomponent
+        </div>
+
+        <div class="col-md-6">
+            @component('components.common.card')
+                @slot('card_header')
+                    <h3 class="mb-0">
+                        Ideias
+                    </h3>
+                @endslot
+
+                @component('components.common.table', [
+                    'columns' => [
+                        [
+                            'label' => '#',
+                            'style' => 'width: 10px',
+                        ],
+                        [
+                            'label' => 'Título:'
+                        ],
+                    ],
+                ])
+                    @foreach ($ideas as $idea)
+                        <tr>
+                            <td>{{ $idea->id }}</td>
+                            <td style="color: {{ $category->color }}">
+                                <a href="{{ route('ideas.show', ['ideia' => $idea->id]) }}">
+                                    {{ $idea->title }}
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endcomponent
+
+                @if ($total > $qtd_rows)
+                    @slot('card_footer')
+                        {{ $ideas->appends($request)->links('pagination::bootstrap-5') }}
+                    @endslot
+                @endif
+            @endcomponent
+        </div>
+    </div>
+@endsection
+
+@section('js')
+    <script src="{{ asset('assets/js/app.js') }}"></script>
 @endsection

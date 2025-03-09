@@ -65,7 +65,33 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, Request $request)
+    {
+        $qtd_rows = $request->get('qtd_rows') ?? '5';
+
+        $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if (!$category) return redirect()->route('categories.index');
+
+        $ideas = $category->ideas()->paginate($qtd_rows);
+        $unrelatedIdeas = Idea::whereDoesntHave('categories', function ($query) use ($category) {
+            $query->where('categories.id', $category->id);
+        })->where('user_id', Auth::user()->id)->get();
+
+        return view('category.view', [
+            'category' => $category,
+            'ideas' => $ideas,
+            'request' => $request->all(),
+            'unrelatedIdeas' => $unrelatedIdeas,
+            'qtd_rows' => $qtd_rows,
+            'total' => $ideas->toArray()['total'],
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function oldShow(string $id)
     {
         $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
 
@@ -76,7 +102,7 @@ class CategoryController extends Controller
             $query->where('categories.id', $category->id);
         })->where('user_id', Auth::user()->id)->get();
 
-        return view('category.view', [
+        return view('category.old-view', [
             'category' => $category,
             'ideas' => $ideas,
             'unrelatedIdeas' => $unrelatedIdeas,
