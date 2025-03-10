@@ -24,32 +24,10 @@
                 @endslot
 
                 <div class="p-3">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            @component('components.form.input-advanced', [
-                                'id' => 'name',
-                                'label' => 'Nome:',
-                                'name' => 'name',
-                                'placeholder' => 'Digite o nome da categoria...',
-                                'read_only' => true,
-                                'value' => $category->name,
-                            ])
-                            @endcomponent
-                        </div>
-
-                        <div class="col-sm-6">
-                            @component('components.form.input-advanced', [
-                                'id' => 'color',
-                                'label' => 'Cor:',
-                                'name' => 'color',
-                                'placeholder' => 'Selecione a cor da categoria...',
-                                'type' => 'color',
-                                'read_only' => true,
-                                'value' => $category->color,
-                            ])
-                            @endcomponent
-                        </div>
-                    </div>
+                    @include('category.form', [
+                        'category' => $category,
+                        'isVisible' => true,
+                    ])
                 </div>
             @endcomponent
         </div>

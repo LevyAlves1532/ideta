@@ -4,5 +4,5 @@
     name="{{ $name }}" id="{{ $id }}" 
     placeholder="{{ $placeholder ?? '' }}" 
     value="{{ $value ?? '' }}"
-    @if(!empty($read_only)) readonly @endif
+    @if(!empty($read_only)) disabled @endif
 >
