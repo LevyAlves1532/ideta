@@ -103,6 +103,20 @@ class CategoryController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function oldEdit(string $id)
+    {
+        $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
+
+        if (!$category) return redirect()->route('categories.index');
+
+        return view('category.old-edit', [
+            'category' => $category,
+        ]);
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)

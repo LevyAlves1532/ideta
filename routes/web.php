@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function() {
 
     Route::post('/categorias/ideia', [CategoryController::class, 'addIdeaCategory'])->name('categories.add-idea');
     Route::delete('/categorias/ideia/{ideia}', [CategoryController::class, 'removeIdeaCategory'])->name('categories.remove-idea');
+    Route::get('/old/categorias/{id}/edit', [CategoryController::class, 'oldEdit']);
     Route::resource('/categorias', CategoryController::class)->names([
         'index' => 'categories.index',
         'create' => 'categories.create',

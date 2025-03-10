@@ -16,20 +16,9 @@
 
     <div class="row">
         <div class="col-md-6">
-            @component('components.common.card')
-                @slot('card_header')
-                    <h3 class="mb-0">
-                        Formulário
-                    </h3>
-                @endslot
-
-                <div class="p-3">
-                    @include('category.form', [
-                        'category' => $category,
-                        'isVisible' => true,
-                    ])
-                </div>
-            @endcomponent
+            @include('category.form', [
+                'isVisible' => true,
+            ])
         </div>
 
         <div class="col-md-6">

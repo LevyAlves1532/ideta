@@ -15,15 +15,5 @@
         </div>
     </div>
 
-    @component('components.common.card')
-        @slot('card_header')
-            <h3 class="mb-0">
-                Formulário
-            </h3>
-        @endslot
-
-        <div class="p-3">
-            @include('category.form')
-        </div>
-    @endcomponent
+    @include('category.form')
 @endsection

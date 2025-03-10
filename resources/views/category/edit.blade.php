@@ -1,21 +1,19 @@
-@extends('_layout.base', [
-    'navItemActive' => 'categories',
-])
 
-@section('sufix', 'Editar Categoria')
+@extends('_layout.main-adminlte')
 
-@section('body')
-    <div class="container p-3">
-        <div class="d-flex mt-3" style="justify-content: space-between;align-items:center">
-            <h2>Editar Categoria</h2>
-            <a href="{{ route('categories.index') }}" class="btn btn-primary float-right">Voltar</a>
-        </div>
-        <hr>
-        <div style="max-width: 450px; margin-top: 16px; margin-left:auto; margin-right: auto;">
-            @component('category.old-form', [
-                'category' => $category,
-            ])
-            @endcomponent
+@section('title', 'Note Free - Editar Categoria')
+
+@section('content_header')
+    <h2>Editar Categoria</h2>
+    <hr>
+@endsection
+
+@section('content')
+    <div class="d-flex justify-content-end mb-3">
+        <div class="btn-group">
+            <a href="{{ route('categories.index') }}" class="btn btn-primary">Voltar para Categorias</a>
         </div>
     </div>
+
+    @include('category.form')
 @endsection
