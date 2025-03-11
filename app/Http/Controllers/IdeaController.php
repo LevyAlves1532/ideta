@@ -22,6 +22,7 @@ class IdeaController extends Controller
         $userId = Auth::user()->id;
         $search = $request->get('search') ?? '';
         $categoryId = $request->get('category_id') ?? '';
+        $qtd_rows = $request->get('qtd_rows') ?? '5';
 
         $ideas = Idea::where('user_id', $userId)
             ->where('title', 'LIKE', '%' . $search . '%')
@@ -32,13 +33,15 @@ class IdeaController extends Controller
                     });
                 }
             })
-            ->paginate(5);
+            ->paginate($qtd_rows);
         $categories = Category::where('user_id', $userId)->get();
 
         return view('idea.index', [
             'ideas' => $ideas,
             'request' => $request->all(),
             'categories' => $categories,
+            'qtd_rows' => $qtd_rows,
+            'total' => $ideas->toArray()['total'],
         ]);
     }
 
