@@ -61,7 +61,9 @@
                             <div class="dropdown-menu" role="menu" style="">
                                 <a class="dropdown-item text-info" href="{{ route('categories.show', ['categoria' => $category->id]) }}">Visualizar</a>
                                 <a class="dropdown-item text-primary" href="{{ route('categories.edit', ['categoria' => $category->id]) }}">Editar</a>
-                                <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#modal-delete" data-action="{{ route('categories.destroy', ['categoria' => $category->id]) }}">Deletar</button>
+                                @if (!$category->is_default)
+                                    <button type="button" class="dropdown-item text-danger" data-toggle="modal" data-target="#modal-delete" data-action="{{ route('categories.destroy', ['categoria' => $category->id]) }}">Deletar</button>
+                                @endif
                             </div>
                         </div>
                     </td>
