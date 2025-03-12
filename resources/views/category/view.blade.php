@@ -94,6 +94,6 @@
     @endcomponent
 @endsection
 
-@section('js')
+@section('main')
     <script src="{{ asset('assets/js/app.js') }}"></script>
 @endsection

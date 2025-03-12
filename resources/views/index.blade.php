@@ -79,6 +79,6 @@
     </div>
 @endsection
 
-@section('js')
+@section('main_js')
     <script src="{{ asset('assets/js/views/home.js') }}"></script>
 @endsection

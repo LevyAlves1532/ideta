@@ -113,7 +113,3 @@
         <p>Você deseja deletar a categoria?</p>
     @endcomponent
 @endsection
-
-@section('js')
-    <script src="{{ asset('assets/js/app.js') }}"></script>
-@endsection

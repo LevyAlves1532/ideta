@@ -19,6 +19,15 @@
                 </button>
             </div>
         </div>
+    @elseif (isset($type) && $type === 'select')
+        @component('components.form.select2', [
+            'id' => $id,
+            'name' => $name,
+            'options' => $options ?? collect([]),
+            'selectedOption' => $selectedOption ?? [],
+            'isMutiple' => $isMutiple ?? false,
+        ])
+        @endcomponent
     @else
         @component('components.form.input', [
             'id' => $id,

@@ -42,6 +42,7 @@ class IdeaController extends Controller
             'categories' => $categories,
             'qtd_rows' => $qtd_rows,
             'total' => $ideas->toArray()['total'],
+            'category_id' => $categoryId,
         ]);
     }
 
@@ -89,32 +90,32 @@ class IdeaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, Request $request)
     {
+        $qtd_rows = $request->get('qtd_rows') ?? '5';
+
         $userId = Auth::user()->id;
 
         $idea = Idea::where('id', $id)->where('user_id', $userId)->first();
 
         if (!$idea) return redirect()->route('categories.index');
 
-        $allCategories = Category::where('user_id', $userId)->get();
-
-        $categories = $idea->categories()->paginate(5);
+        $categories = $idea->categories()->paginate($qtd_rows);
 
         $unrelatedCategories = Category::whereDoesntHave('ideas', function ($query) use ($idea) {
             $query->where('ideas.id', $idea->id);
         })->where('user_id', $userId)->get();
 
-        $selectedCategories = $idea->categories->map(function ($category) {
-            return $category->id;
-        })->toArray();
-
         return view('idea.view', [
             'idea' => $idea,
-            'allCategories' => $allCategories,
-            'selectedCategories' => $selectedCategories,
             'categories' => $categories,
-            'unrelatedCategories' => $unrelatedCategories,
+            'request' => $request->all(),
+            'unrelatedCategories' => $unrelatedCategories->map(fn ($unrelatedCategory) => [
+                'id' => $unrelatedCategory->id,
+                'name' => $unrelatedCategory->name,
+            ])->toArray(),
+            'qtd_rows' => $qtd_rows,
+            'total' => $categories->toArray()['total'],
         ]);
     }
 

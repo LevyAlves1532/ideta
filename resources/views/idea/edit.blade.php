@@ -12,7 +12,7 @@
         </div>
         <hr>
         <div style="max-width: 450px; margin-top: 16px; margin-left:auto; margin-right: auto;">
-            @component('idea.form', [
+            @component('idea.old-form', [
                 'idea' => $idea,
                 'categories' => $categories,
                 'selectedCategories' => $selectedCategories,

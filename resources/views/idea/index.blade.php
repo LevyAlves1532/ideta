@@ -3,21 +3,6 @@
 
 @section('title', 'Note Free - Ideias')
 
-@section('css')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <style>
-        .select2 .select2-selection {
-            height: 40px;
-            display: block;
-        }
-
-        .select2 .select2-selection__arrow {
-            top: 50% !important;
-            transform: translateY(-50%);
-        }
-    </style>
-@endsection
-
 @section('content_header')
     <h2>Lista de Ideias</h2>
     <hr>
@@ -119,9 +104,9 @@
 
         <div class="form-group">
             <label>Categorias:</label>
-            <select class="form-control" id="category" name="category_id" style="width: 100%;" data-select2-id="1" tabindex="-1" aria-hidden="true">                
+            <select class="form-control" id="category" name="category_id" style="width: 100%;">                
                 @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    <option @if($category->id == $category_id) selected @endif value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -145,10 +130,7 @@
     @endcomponent
 @endsection
 
-@section('js')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="{{ asset('assets/js/app.js') }}"></script>
+@section('main_js')
     <script>
         $(function() {
             $('#category').select2();
