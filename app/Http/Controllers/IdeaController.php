@@ -180,12 +180,17 @@ class IdeaController extends Controller
     {
         $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
 
+        
         if (!$idea) return redirect()->route('ideas.index');
-
+        
         $idea->categories()->detach();
 
         foreach ($idea->notes as $note) {
             $note->delete();
+        }
+
+        foreach ($idea->ideasShares as $ideaShare) {
+            $ideaShare->delete();
         }
 
         $idea->delete();
