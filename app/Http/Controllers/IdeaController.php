@@ -51,7 +51,7 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('user_id', Auth::user()->id)->get();
+        $categories = Category::where('user_id', Auth::user()->id)->where('is_default', false)->get();
         return view('idea.create', [
             'categories' => $categories,
         ]);

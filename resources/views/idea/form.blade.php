@@ -18,7 +18,7 @@
                 @endif
             @endif
             <div class="row">
-                <div class="@if($isVisible) col-sm-12 @else col-sm-6 @endif">
+                <div class="@if(isset($isVisible)) col-sm-12 @else col-sm-6 @endif">
                     @component('components.form.input-advanced', [
                         'id' => 'title',
                         'label' => 'Nome:',
@@ -30,16 +30,16 @@
                     @endcomponent
                 </div>
 
-                @if (!$isVisible)  
+                @if (!isset($isVisible))  
                     <div class="col-sm-6">
                         @component('components.form.input-advanced', [
                             'type' => 'select',
                             'id' => 'categories',
                             'label' => 'Categoria:',
                             'name' => 'categories[]',
-                            'options' => $idea->categories->map(fn ($category) => [
+                            'options' => $categories->map(fn ($category) => [
                                 'id' => $category->id,
-                                'name' => $category->name
+                                'name' => $category->name,
                             ]),
                             'isMutiple' => true,
                         ])
