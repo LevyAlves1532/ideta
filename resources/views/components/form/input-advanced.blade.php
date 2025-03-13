@@ -24,7 +24,7 @@
             'id' => $id,
             'name' => $name,
             'options' => $options ?? collect([]),
-            'selectedOption' => $selectedOption ?? [],
+            'selectedOptions' => $selectedOptions ?? [],
             'isMutiple' => $isMutiple ?? false,
         ])
         @endcomponent

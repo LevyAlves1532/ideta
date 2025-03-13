@@ -41,6 +41,7 @@
                                 'id' => $category->id,
                                 'name' => $category->name,
                             ]),
+                            'selectedOptions' => $selectedCategories ?? [],
                             'isMutiple' => true,
                         ])
                         @endcomponent

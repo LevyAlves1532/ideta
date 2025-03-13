@@ -125,7 +125,7 @@ class IdeaController extends Controller
     public function edit(string $id)
     {
         $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
-        $categories = Category::where('user_id', Auth::user()->id)->get();
+        $categories = Category::where('user_id', Auth::user()->id)->where('is_default', false)->get();
         $selectedCategories = $idea->categories->map(function ($category) {
             return $category->id;
         })->toArray();
@@ -166,11 +166,9 @@ class IdeaController extends Controller
             'title' => $body['title']
         ]);
 
-        if (isset($body['categories'])) {
-            $category = Category::where('user_id', $userId)->where('is_default', true)->first();
-            $body['categories'][] = "{$category->id}";
-            $idea->categories()->sync($body['categories']);
-        }
+        $category = Category::where('user_id', $userId)->where('is_default', true)->first();
+        $body['categories'][] = "{$category->id}";
+        $idea->categories()->sync($body['categories']);
 
         return redirect()->route('ideas.edit', ['ideia' => $idea->id]);
     }
