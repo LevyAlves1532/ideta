@@ -23,6 +23,7 @@ class NoteController extends Controller
 
         return view('note.index', [
             'idea' => $idea,
+            'created_at' => Carbon::parse($idea->created_at)->isoFormat('DD MMM. Y'),
             'ckeditor_key' => env('CKEDITOR_KEY_DEVELOPMENT'),
         ]);
     }
@@ -169,6 +170,7 @@ class NoteController extends Controller
             'ideaShare' => $ideaShare,
             'ckeditor_key' => env('CKEDITOR_KEY_DEVELOPMENT'),
             'isShared' => true,
+            'created_at' => Carbon::parse($ideaShare->created_at)->isoFormat('DD MMM. Y'),
         ]);
     }
 
