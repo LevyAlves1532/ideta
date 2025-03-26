@@ -23,6 +23,7 @@ class UserController extends Controller
             'user' => $user,
             'time_usage_system' => $interval->cascade()->forHumans(),
             'isViewProfile' => Auth::user()->id !== $user->id,
+            'isVisible' => true,
         ]);
     }
 
