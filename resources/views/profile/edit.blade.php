@@ -1,21 +1,17 @@
-@extends('_layout.base', [
-    'navItemActive' => 'profile',
-])
+@extends('_layout.main-adminlte')
 
-@section('sufix', 'Editar Perfil')
+@section('title', 'Wordea - Editar Perfil')
 
-@section('body')
-    <div class="container p-3">
-        <div class="d-flex mt-3" style="justify-content: space-between;align-items:center">
-            <h2>Editar Perfil</h2>
-            <a href="{{ route('profile.show', ['user_id' => $user->id]) }}" class="btn btn-primary float-right">Voltar</a>
-        </div>
-        <hr>
-        <div style="max-width: 450px; margin-top: 16px; margin-left:auto; margin-right: auto;">
-            @component('profile.form', [
-                'user' => $user,
-            ])
-            @endcomponent
+@section('content_header')
+    <h2>Editar Perfil</h2>
+    <hr>
+@endsection
+
+@section('content')
+    <div class="d-flex justify-content-end mb-3">
+        <div class="btn-group">
+            <a href="{{ route('profile.show', ['user_id' => $user->id]) }}" class="btn btn-success">Voltar</a>
         </div>
     </div>
+    @include('profile.form')
 @endsection

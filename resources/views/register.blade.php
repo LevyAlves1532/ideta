@@ -1,6 +1,6 @@
 @extends('adminlte::auth.auth-page')
 
-@section('title', 'Note Free - Registrar')
+@section('title', 'Wordea - Registrar')
 
 @section('auth_header')
     <p class="m-0"><strong>Registre-se</strong></p>

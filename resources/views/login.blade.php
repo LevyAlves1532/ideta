@@ -1,6 +1,6 @@
 @extends('adminlte::auth.auth-page')
 
-@section('title', 'Note Free - Login')
+@section('title', 'Wordea - Login')
 
 @section('auth_header')
     <p class="m-0"><strong>Fazer Login</strong></p>
@@ -31,8 +31,7 @@
 
 @section('auth_footer')
     <div class="text-center">
-        <p class="text-muted">Não tem conta? <a href="{{ route('register') }}">Clique Aqui</a></p>
-        <p class="text-muted mb-0">Esqueceu a senha? <a href="#">Clique Aqui</a></p>
+        <p class="text-muted mb-0">Não tem conta? <a href="{{ route('register') }}">Clique Aqui</a></p>
     </div>
 @endsection
 

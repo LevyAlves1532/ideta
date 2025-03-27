@@ -1,7 +1,7 @@
 
 @extends('_layout.main-adminlte')
 
-@section('title', 'Note Free - Editar Categoria')
+@section('title', 'Wordea - Editar Categoria')
 
 @section('content_header')
     <h2>Editar Categoria</h2>

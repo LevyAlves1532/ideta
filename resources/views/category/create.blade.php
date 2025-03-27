@@ -1,7 +1,7 @@
 
 @extends('_layout.main-adminlte')
 
-@section('title', 'Note Free - Criar Categoria')
+@section('title', 'Wordea - Criar Categoria')
 
 @section('content_header')
     <h2>Criar Categoria</h2>

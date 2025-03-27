@@ -1,6 +1,6 @@
 @extends('_layout.main-adminlte')
 
-@section('title', 'Note Free - Notas')
+@section('title', 'Wordea - Notas')
 
 @section('main_css')
     <link rel="stylesheet" href="{{ asset('assets/css/libs/summernote.min.css') }}">

@@ -1,7 +1,7 @@
 @extends('_layout.main-adminlte')
 
 @section('content_header')
-    <h2>Seja Bem-Vindo ao Note Free</h2>
+    <h2>Seja Bem-Vindo ao Wordea</h2>
     <hr>
 @endsection
 

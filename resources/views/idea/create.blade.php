@@ -2,7 +2,7 @@
 
 @extends('_layout.main-adminlte')
 
-@section('title', 'Note Free - Criar Ideia')
+@section('title', 'Wordea - Criar Ideia')
 
 @section('content_header')
     <h2>Criar Ideia</h2>
