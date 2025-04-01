@@ -1,76 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Ideta - Registre-se</title>
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('adminlte::auth.auth-page')
 
-        <!-- Fonts -->
-        <link rel="dns-prefetch" href="//fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+@section('title', 'Wordea - Registrar')
 
-        <!-- Scripts -->
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-lg" style="background-color: whitesmoke">
-            <div class="container py-2">
-                <a class="navbar-brand" href="{{ route('login') }}">Ideta</a>
+@section('auth_header')
+    <p class="m-0"><strong>Registre-se</strong></p>
+@endsection
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+@section('auth_body')
+    <form method="POST" action="{{ route('register.post') }}">
+        @csrf
+        @component('components.form.input-advanced', [
+            'id' => 'name',
+            'label' => 'Nome:',
+            'name' => 'name',
+            'placeholder' => 'Digite seu nome...'
+        ])
+        @endcomponent
+        @component('components.form.input-advanced', [
+            'id' => 'email',
+            'label' => 'E-mail:',
+            'name' => 'email',
+            'placeholder' => 'Digite seu e-mail...',
+            'type' => 'email'
+        ])
+        @endcomponent
+        @component('components.form.input-advanced', [
+            'id' => 'password',
+            'label' => 'Senha:',
+            'name' => 'password',
+            'placeholder' => 'Digite sua senha...',
+            'type' => 'password'
+        ])
+        @endcomponent
+        @component('components.form.input-advanced', [
+            'id' => 'password-confirmation',
+            'label' => 'Confirmar Senha:',
+            'name' => 'password_confirmation',
+            'placeholder' => 'Confirme sua senha...',
+            'type' => 'password'
+        ])
+        @endcomponent
+        <button type="submit" class="btn btn-dark">Registrar</button>
+    </form>
+@endsection
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ route('register') }}">Cadastre-se</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+@section('auth_footer')
+    <div class="text-center">
+        <p class="text-muted mb-0">Tem conta? <a href="{{ route('login') }}">Clique Aqui</a></p>
+    </div>
+@endsection
 
-        <div class="p-3">
-            <div class="container-form">
-                <div class="card">
-                    <div class="card-header bg-success text-white">
-                        <h4 class="py-2" style="margin-bottom: 0; text-align: center;">Faça seu cadastro</h4>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('register.post') }}">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nome:</label>
-                                <input type="text" name="name" class="form-control" id="name" value="{{ old('name') }}">
-                                @error('name')
-                                    <div class="form-text text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">E-mail:</label>
-                                <input type="email" name="email" class="form-control" id="email" value="{{ old('email') }}">
-                                @error('email')
-                                    <div class="form-text text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Senha</label>
-                                <input type="password" name="password" class="form-control" id="password" value="{{ old('password') }}">
-                                @error('password')
-                                    <div class="form-text text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <button type="submit" class="btn btn-primary">Cadastre-se</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
+@section('js')
+    <script src="{{ asset('assets/js/app.js') }}"></script>
+@endsection

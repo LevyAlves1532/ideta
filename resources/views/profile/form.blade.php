@@ -1,25 +1,51 @@
-<form method="POST" action="{{ route('profile.update', ['user_id' => $user->id]) }}">
-    @if (!isset($isVisible))
-        @csrf
-        @method('PUT')
-    @endif
-    <div class="mb-3">
-        <label for="name" class="form-label">Nome</label>
-        <input type="name" class="form-control" id="name" name="name" value="{{ old('name') ?? $user->name ?? '' }}" @if (isset($isVisible)) disabled @endif>
-        @error('name')
-            <div class="form-text text-danger">{{ $message }}</div>
-        @enderror
+@component('components.common.card')
+    @slot('card_header')
+        <h3 class="mb-0">
+            Meus Dados
+        </h3>
+    @endslot
+
+    <div class="p-3">
+        <form method="POST" action="{{ route('profile.update', ['user_id' => $user->id]) }}">
+            @if (!isset($isVisible))
+                @csrf
+                @method('PUT')
+            @endif
+            <div class="row">
+                <div class="col-sm-6">
+                    @component('components.form.input-advanced', [
+                        'id' => 'name',
+                        'label' => 'Nome:',
+                        'name' => 'name',
+                        'placeholder' => 'Digite seu nome...',
+                        'value' => old('name') ?? $user->name ?? '',
+                        'read_only' => isset($isVisible),
+                    ])
+                    @endcomponent
+                </div>
+
+                <div class="col-sm-6">
+                    @component('components.form.input-advanced', [
+                        'id' => 'email',
+                        'label' => 'E-mail:',
+                        'name' => 'email',
+                        'placeholder' => 'Digite seu email...',
+                        'type' => 'email',
+                        'value' => old('email') ?? $user->email ?? '',
+                        'read_only' => isset($isVisible),
+                    ])
+                    @endcomponent
+                </div>
+
+                <div class="col-sm-12 d-flex justify-content-end">
+                    @if (!isset($isVisible))
+                        <button type="submit" class="btn btn-success">
+                            Atualizar Perfil
+                        </button>
+                    @endif
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="mb-3">
-        <label for="email" class="form-label">E-mail</label>
-        <input type="email" class="form-control" id="email" name="email" value="{{ old('email') ?? $user->email ?? '' }}" @if (isset($isVisible)) disabled @endif>
-        @error('email')
-            <div class="form-text text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    @if (!isset($isVisible))
-        <button type="submit" class="btn btn-success">
-            Atualizar Perfil
-        </button>
-    @endif
-</form>
+@endcomponent
+

@@ -1,85 +1,84 @@
-@extends('_layout.base', [
-    'navItemActive' => 'home',
-])
+@extends('_layout.main-adminlte')
 
-@section('sufix', 'Home')
+@section('content_header')
+    <h2>Seja Bem-Vindo ao Wordea</h2>
+    <hr>
+@endsection
 
-@section('body')
-    <div class="container py-3">
-        <h2 class="mt-3">Seja Bem-Vindo ao Ideta 1.4.3</h2>
-        <hr>
+@section('content')    
+    <div class="row">
+        <div class="col-md-6">
+            @component('components.common.card')
+                @slot('card_header')
+                    <p class="mb-0">Ultimas Ideias Trabalhadas</p>
+                @endslot
 
-        <div class="d-flex">
-            <h4 class="mt-3 me-auto">Ultimas Ideias Trabalhadas</h4>
-
-            @if ($latestIdeas->count() > 0)
-                <form class="row g-3 align-items-center float-right">
-                    <div class="col-auto">
-                        <select class="form-select" name="category_id">
-                            <option selected disabled>Selecione a categoria</option>
-                            @foreach ($categoriesLatestIdeas as $category)
-                                <option value="{{ $category->id }}" @if ($category->id == $category_id) selected @endif>{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-auto">
-                        <button class="btn btn-success">Filtrar</button>
-                    </div>
-                    @if (!empty($category_id))
-                        <div class="col-auto">
-                            <a href="{{ route('index') }}" class="btn btn-primary">Limpar Filtro</a>
-                        </div>
-                    @endif
-                </form>
-            @endif
-        </div>
-
-        @if ($latestIdeas->count() > 0)
-            <table class="table table-hover table-dark">
-                <thead>
-                    <tr>
-                        <th scope="col">Título</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($latestIdeas as $idea)
+                @component('components.common.table', [
+                    'columns' => [
+                        [
+                            'label' => '#',
+                            'style' => 'width: 10px',
+                        ],
+                        [
+                            'label' => 'Ideia:'
+                        ],
+                        [
+                            'label' => ''
+                        ]
+                    ],
+                ])
+                    @foreach ($latestIdeas as $latestIdea)
                         <tr>
-                            <td style="vertical-align: middle;">{{ $idea->title }}</td>
+                            <td>{{ $latestIdea->id }}</td>
+                            <td>{{ $latestIdea->title }}</td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Ações
+                                    <div class="btn btn-success">Ações</div>
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
                                     </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-secondary" href="{{ route('ideas.show', ['ideia' => $idea->id]) }}">Visualizar</a></li>
-                                        <li><a class="dropdown-item text-primary" href="{{ route('ideas.edit', ['ideia' => $idea->id]) }}">Editar</a></li>
-                                        <li>
-                                            <form id="form-{{ $idea->id }}" method="POST" action="{{ route('ideas.destroy', ['ideia' => $idea->id]) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a class="dropdown-item text-danger" href="#" onclick="document.getElementById('form-{{ $idea->id }}').submit()">Deletar</a>
-                                            </form>
-                                        </li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="{{ route('notes.index', ['idea_id' => $idea->id]) }}">Ver Anotações</a></li>
-                                        <li>
-                                            <form id="form-share-{{ $idea->id }}" method="POST" action="{{ route('ideas.share-idea') }}">
-                                                @csrf
-                                                <input type="hidden" name="idea_id" value="{{ $idea->id }}">
-                                                <a class="dropdown-item" href="#" onclick="document.getElementById('form-share-{{ $idea->id }}').submit()">Compartilhar</a>
-                                            </form>
-                                        </li>
-                                    </ul>
+                                    <div class="dropdown-menu" role="menu" style="">
+                                        <a class="dropdown-item text-info" href="{{ route('ideas.show', ['ideia' => $latestIdea->id]) }}">Visualizar</a>
+                                        <a class="dropdown-item text-primary" href="{{ route('ideas.edit', ['ideia' => $latestIdea->id]) }}">Editar</a>
+                                        <form id="form-{{ $latestIdea->id }}" method="POST" action="{{ route('ideas.destroy', ['ideia' => $latestIdea->id]) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="dropdown-item text-danger" onclick="document.getElementById('form-{{ $latestIdea->id }}').submit()">Deletar</button>
+                                        </form>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item text-info" href="{{ route('notes.index', ['idea_id' => $latestIdea->id]) }}">Ver Anotações</a>
+                                        <form id="form-share-{{ $latestIdea->id }}" method="POST" action="{{ route('ideas.share-idea') }}">
+                                            @csrf
+                                            <input type="hidden" name="idea_id" value="{{ $latestIdea->id }}">
+                                            <button class="dropdown-item text-success" onclick="document.getElementById('form-share-{{ $latestIdea->id }}').submit()">Compartilhar</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
-        @else
-            <p class="text-center text-secondary">Não há ideias</p>
-        @endif
+                @endcomponent
+                
+                @slot('card_footer')
+                    <div class="form-group">
+                        <label style="" for="categories">Categoria:</label>
+                        <select class="form-control" id="categories" tabindex="-1" aria-hidden="true">
+                            <option value="" disabled selected>Filtre pela categoria mais recente</option>
+                            @foreach ($categoriesLatestIdeas as $categoryLatestIdeas)
+                                <option value="{{ $categoryLatestIdeas->id }}" @if ($categoryLatestIdeas->id == $category_id) selected @endif>{{ $categoryLatestIdeas->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    @if (!empty($category_id))
+                        <a href="{{ route('index') }}" class="btn btn-primary">Limpar Filtro</a>
+                    @endif
+                @endslot
+            @endcomponent
+        </div>
     </div>
 @endsection
 
+@section('main_js')
+    <script src="{{ asset('assets/js/views/home.js') }}"></script>
+@endsection

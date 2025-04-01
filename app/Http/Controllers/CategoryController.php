@@ -18,11 +18,14 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search') ?? '';
+        $qtd_rows = $request->get('qtd_rows') ?? '5';
 
-        $categories = Category::where('user_id', Auth::user()->id)->where('name', 'LIKE', '%' . $search . '%')->paginate(5);
+        $categories = Category::where('user_id', Auth::user()->id)->where('name', 'LIKE', '%' . $search . '%')->paginate($qtd_rows);
         return view('category.index', [
             'categories' => $categories,
             'request' => $request->all(),
+            'qtd_rows' => $qtd_rows,
+            'total' => $categories->toArray()['total'],
         ]);
     }
 
@@ -62,13 +65,15 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, Request $request)
     {
+        $qtd_rows = $request->get('qtd_rows') ?? '5';
+
         $category = Category::where('id', $id)->where('user_id', Auth::user()->id)->first();
 
         if (!$category) return redirect()->route('categories.index');
 
-        $ideas = $category->ideas()->paginate(5);
+        $ideas = $category->ideas()->paginate($qtd_rows);
         $unrelatedIdeas = Idea::whereDoesntHave('categories', function ($query) use ($category) {
             $query->where('categories.id', $category->id);
         })->where('user_id', Auth::user()->id)->get();
@@ -76,7 +81,10 @@ class CategoryController extends Controller
         return view('category.view', [
             'category' => $category,
             'ideas' => $ideas,
+            'request' => $request->all(),
             'unrelatedIdeas' => $unrelatedIdeas,
+            'qtd_rows' => $qtd_rows,
+            'total' => $ideas->toArray()['total'],
         ]);
     }
 

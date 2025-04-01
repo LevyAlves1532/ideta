@@ -56,20 +56,12 @@ class AuthController extends Controller
 
     public function store(Request $request)
     {
-        $body = $request->only('name', 'email', 'password');
-
+        $body = $request->only('name', 'email', 'password', 'password_confirmation');
+        
         $validated = $this->validate($body, true);
 
         if (!$validated->fails()) {
-            $user = User::create($body);
-
-            Category::create([
-                'user_id' => $user->id,
-                'name' => 'Todas',
-                'slug' => 'todas',
-                'color' => '#000000',
-                'is_default' => true,
-            ]);
+            User::create($body);
 
             Auth::attempt([
                 'email' => $body['email'],
@@ -116,11 +108,13 @@ class AuthController extends Controller
         if ($isRegister) {
             $rules['name'] = 'required|min:4|max:255';
             $rules['email'] = $rules['email'] . '|unique:users';
+            $rules['password'] = $rules['password'] . '|confirmed';
 
             $messages['name.required'] = 'O campo de nome é obrigatório';
             $messages['name.min'] = 'O campo de nome deve ter no mínimo 4 caracteres';
             $messages['name.max'] = 'O campo de nome deve ter no máximo 255 caracteres';
             $messages['email.unique'] = 'Já existe um usuário com esse e-mail';
+            $messages['password.confirmed'] = 'Senhas não coincidem!';
         }
 
         return Validator::make($body, $rules, $messages);

@@ -1,48 +1,61 @@
-@if (isset($idea))
-    <form method="POST" action="{{ route('ideas.update', ['ideia' => $idea->id]) }}">
-@else
-    <form method="POST" action="{{ route('ideas.store') }}">
-@endif
-    @if (!isset($isVisible))
-        @csrf
+@component('components.common.card')
+    @slot('card_header')
+        <h3 class="mb-0">
+            Formulário
+        </h3>
+    @endslot
+
+    <div class="p-3">
         @if (isset($idea))
-            @method('PUT')
+            <form method="POST" action="{{ route('ideas.update', ['ideia' => $idea->id]) }}">
+        @else
+            <form method="POST" action="{{ route('ideas.store') }}">
         @endif
-    @endif
-    @php
-        $sCategories = old('categories') ?? $selectedCategories ?? [];
-    @endphp
-    <div class="mb-3">
-        <label for="title" class="form-label">Título</label>
-        <input type="text" class="form-control" id="title" name="title" value="{{ old('title') ?? $idea->title ?? '' }}" @if (isset($isVisible)) disabled @endif>
-        @error('title')
-            <div class="form-text text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="mb-3">
-        <label for="categories" class="form-label">Categorias</label>
-        <select class="form-select" multiple name="categories[]" id="categories" @if (isset($isVisible)) disabled @endif>
-            <option @if (empty($sCategories)) selected @endif disabled>Selecione uma ou mais categorias</option>
-            @foreach ($categories as $category)
-                @if (!$category->is_default)
-                    <option
-                        value="{{ $category->id }}"
-                        @if (in_array($category->id, $sCategories))
-                        selected
-                        @endif
-                    >
-                        {{ $category->name }}
-                    </option>
+            @if (!isset($isVisible))
+                @csrf
+                @if (isset($idea))
+                    @method('PUT')
                 @endif
-            @endforeach
-        </select>
-        @error('categories')
-            <div class="form-text text-danger">{{ $message }}</div>
-        @enderror
+            @endif
+            <div class="row">
+                <div class="@if(isset($isVisible)) col-sm-12 @else col-sm-6 @endif">
+                    @component('components.form.input-advanced', [
+                        'id' => 'title',
+                        'label' => 'Nome:',
+                        'name' => 'title',
+                        'placeholder' => 'Digite o título da ideia...',
+                        'value' => old('title') ?? $idea->title ?? '',
+                        'read_only' => isset($isVisible),
+                    ])
+                    @endcomponent
+                </div>
+
+                @if (!isset($isVisible))  
+                    <div class="col-sm-6">
+                        @component('components.form.input-advanced', [
+                            'type' => 'select',
+                            'id' => 'categories',
+                            'label' => 'Categoria:',
+                            'name' => 'categories[]',
+                            'options' => $categories->map(fn ($category) => [
+                                'id' => $category->id,
+                                'name' => $category->name,
+                            ]),
+                            'selectedOptions' => $selectedCategories ?? [],
+                            'isMutiple' => true,
+                        ])
+                        @endcomponent
+                    </div>
+                @endif
+
+                <div class="col-sm-12 d-flex justify-content-end">
+                    @if (!isset($isVisible))
+                        <button type="submit" class="btn btn-success">
+                            {{ isset($idea) ? 'Atualizar Ideia' : 'Criar Ideia' }}
+                        </button>
+                    @endif
+                </div>
+            </div>
+        </form>
     </div>
-    @if (!isset($isVisible))
-        <button type="idea" class="btn btn-success">
-            {{ isset($idea) ? 'Atualizar Ideia' : 'Criar Ideia' }}
-        </button>
-    @endif
-</form>
+@endcomponent

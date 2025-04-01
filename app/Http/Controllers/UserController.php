@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -12,14 +13,17 @@ class UserController extends Controller
 {
     public function show(string $id)
     {
-        if (Auth::user()->id != $id) return redirect()->back();
-
         $user = User::find($id);
 
         if (!$user) return redirect()->back();
 
+        $interval = CarbonInterval::seconds($user->metric->total_usage_time);
+
         return view('profile.view', [
             'user' => $user,
+            'time_usage_system' => $interval->cascade()->forHumans(),
+            'isViewProfile' => Auth::user()->id !== $user->id,
+            'isVisible' => true,
         ]);
     }
 

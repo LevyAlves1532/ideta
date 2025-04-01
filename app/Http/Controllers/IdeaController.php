@@ -22,6 +22,7 @@ class IdeaController extends Controller
         $userId = Auth::user()->id;
         $search = $request->get('search') ?? '';
         $categoryId = $request->get('category_id') ?? '';
+        $qtd_rows = $request->get('qtd_rows') ?? '5';
 
         $ideas = Idea::where('user_id', $userId)
             ->where('title', 'LIKE', '%' . $search . '%')
@@ -32,13 +33,16 @@ class IdeaController extends Controller
                     });
                 }
             })
-            ->paginate(5);
+            ->paginate($qtd_rows);
         $categories = Category::where('user_id', $userId)->get();
 
         return view('idea.index', [
             'ideas' => $ideas,
             'request' => $request->all(),
             'categories' => $categories,
+            'qtd_rows' => $qtd_rows,
+            'total' => $ideas->toArray()['total'],
+            'category_id' => $categoryId,
         ]);
     }
 
@@ -47,7 +51,7 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        $categories = Category::where('user_id', Auth::user()->id)->get();
+        $categories = Category::where('user_id', Auth::user()->id)->where('is_default', false)->get();
         return view('idea.create', [
             'categories' => $categories,
         ]);
@@ -86,32 +90,32 @@ class IdeaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id, Request $request)
     {
+        $qtd_rows = $request->get('qtd_rows') ?? '5';
+
         $userId = Auth::user()->id;
 
         $idea = Idea::where('id', $id)->where('user_id', $userId)->first();
 
         if (!$idea) return redirect()->route('categories.index');
 
-        $allCategories = Category::where('user_id', $userId)->get();
-
-        $categories = $idea->categories()->paginate(5);
+        $categories = $idea->categories()->paginate($qtd_rows);
 
         $unrelatedCategories = Category::whereDoesntHave('ideas', function ($query) use ($idea) {
             $query->where('ideas.id', $idea->id);
         })->where('user_id', $userId)->get();
 
-        $selectedCategories = $idea->categories->map(function ($category) {
-            return $category->id;
-        })->toArray();
-
         return view('idea.view', [
             'idea' => $idea,
-            'allCategories' => $allCategories,
-            'selectedCategories' => $selectedCategories,
             'categories' => $categories,
-            'unrelatedCategories' => $unrelatedCategories,
+            'request' => $request->all(),
+            'unrelatedCategories' => $unrelatedCategories->map(fn ($unrelatedCategory) => [
+                'id' => $unrelatedCategory->id,
+                'name' => $unrelatedCategory->name,
+            ])->toArray(),
+            'qtd_rows' => $qtd_rows,
+            'total' => $categories->toArray()['total'],
         ]);
     }
 
@@ -121,7 +125,7 @@ class IdeaController extends Controller
     public function edit(string $id)
     {
         $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
-        $categories = Category::where('user_id', Auth::user()->id)->get();
+        $categories = Category::where('user_id', Auth::user()->id)->where('is_default', false)->get();
         $selectedCategories = $idea->categories->map(function ($category) {
             return $category->id;
         })->toArray();
@@ -162,11 +166,9 @@ class IdeaController extends Controller
             'title' => $body['title']
         ]);
 
-        if (isset($body['categories'])) {
-            $category = Category::where('user_id', $userId)->where('is_default', true)->first();
-            $body['categories'][] = "{$category->id}";
-            $idea->categories()->sync($body['categories']);
-        }
+        $category = Category::where('user_id', $userId)->where('is_default', true)->first();
+        $body['categories'][] = "{$category->id}";
+        $idea->categories()->sync($body['categories']);
 
         return redirect()->route('ideas.edit', ['ideia' => $idea->id]);
     }
@@ -178,12 +180,17 @@ class IdeaController extends Controller
     {
         $idea = Idea::where('id', $id)->where('user_id', Auth::user()->id)->first();
 
+        
         if (!$idea) return redirect()->route('ideas.index');
-
+        
         $idea->categories()->detach();
 
         foreach ($idea->notes as $note) {
             $note->delete();
+        }
+
+        foreach ($idea->ideasShares as $ideaShare) {
+            $ideaShare->delete();
         }
 
         $idea->delete();
